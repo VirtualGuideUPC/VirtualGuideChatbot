@@ -1,9 +1,9 @@
 {"intents": 
  [{"tag": "Saludos",
-   "patterns": ["Hola", "Hey", "Hi", "Buenos dias", "Buenas tardes", "Buenas noches", "Buenas"],
+   "patterns": ["Hola", "Hey", "Hi", "Buenos días", "Buenas tardes", "Buenas noches", "Buenas"],
    "responses": ["Hola", "Saludos"]},
   {"tag": "Consulta_Lugar", 
-   "patterns": ["Sabes donde está", "¿Dónde queda?", "donde queda este lugar?", "como puedo llegar?", "sabes donde queda?", "me puedes llevar aqui?", "llevame aqui"], 
-   "responses": ["Ok"]}
+   "patterns": ["¿Sabes donde está?", "¿Dónde queda?", "¿Dónde queda este lugar?", "¿Cómo puedo llegar?", "¿sabes dónde queda?", "¿me puedes llevar aqui?", "llévame aquí"], 
+   "responses": ["Ok, has hecho una consulta sobre <LUGAR>"]}
  ]
 }
