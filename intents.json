@@ -1,9 +1,16 @@
 {"intents": 
  [{"tag": "Saludos",
-   "patterns": ["Hola", "Hey", "Hi", "Buenos días", "Buenas tardes", "Buenas noches", "Buenas"],
-   "responses": ["Hola", "Saludos"]},
+   "patterns": ["Hola", "Hey", "Hi", "Buenos días", "Buenas tardes", "Buenas noches", "Buenas", "Saludos", 
+                "Quiero hacer una consulta", "Disculpa, quiero consultar algo", "Hola, quisiera consultar"],
+   "responses": ["Hola", "Saludos", "Hola, ¿cómo puedo ayudarte?"]},
   {"tag": "Consulta_Lugar", 
-   "patterns": ["¿Sabes donde está?", "¿Dónde queda?", "¿Dónde queda este lugar?", "¿Cómo puedo llegar?", "¿sabes dónde queda?", "¿me puedes llevar aqui?", "llévame aquí"], 
-   "responses": ["Ok, has hecho una consulta sobre <LUGAR>"]}
+   "patterns": ["¿Sabes donde está?", "¿Dónde queda?", "¿Dónde queda este lugar?", "¿Cómo puedo llegar?", 
+                "¿Sabes dónde queda?", "¿me puedes llevar aqui?", "llévame aquí", "dónde es?", 
+                "Quiero saber dónde queda"], 
+   "responses": ["Ok, has hecho una consulta sobre <LUGAR>"]},
+  {"tag": "Consulta_Tiempo", 
+   "patterns": ["¿Sabes cuándo empieza?", "¿Cuándo puedo ir?", "¿Desde qué hora está abierto?", "¿Qué días y horas?", 
+                "Quiero saber cuándo está abierto", "Dime qué días y horas está disponible"], 
+   "responses": ["Ok, has hecho una consulta sobre <TIEMPO>"]}
  ]
 }
