@@ -1,16 +1,22 @@
 {"intents": 
- [{"tag": "Saludos",
-   "patterns": ["Hola", "Hey", "Hi", "Buenos días", "Buenas tardes", "Buenas noches", "Buenas", "Saludos", 
-                "Quiero hacer una consulta", "Disculpa, quiero consultar algo", "Hola, quisiera consultar"],
+ [{"tag": "saludos",
+   "patterns": ["Hola", "Hey", "Hi", "Buenos días", "Buenas tardes", "Buenas noches", "Buenas", "Buen día", "Saludos", 
+                "Hello", "¿Cómo estás?", "¿Hay alguien ahí?", "Quiero hacer una consulta", "Disculpa, quiero consultar algo"],
    "responses": ["Hola", "Saludos", "Hola, ¿cómo puedo ayudarte?"]},
-  {"tag": "Consulta_Lugar", 
+   {"tag": "opciones",
+    "patterns": ["¿Cómo puedes ayudarme?", "¿Qué puedes hacer?", "¿Cuál es tu utilidad?", "¿Qué haces?"],
+    "responses": ["Soy la guía de Virtual Guide UPC", "Puedo recibir tus consultas sobre turismo"]},
+  {"tag": "consulta_lugar", 
    "patterns": ["¿Sabes donde está?", "¿Dónde queda?", "¿Dónde queda este lugar?", "¿Cómo puedo llegar?", 
-                "¿Sabes dónde queda?", "¿me puedes llevar aqui?", "llévame aquí", "dónde es?", 
-                "Quiero saber dónde queda"], 
-   "responses": ["Ok, has hecho una consulta sobre <LUGAR>"]},
-  {"tag": "Consulta_Tiempo", 
+                "¿Sabes dónde queda?", "¿me puedes llevar aqui?", "llévame aquí", "dónde es?", "Quiero saber dónde queda"], 
+   "responses": ["Ok, has hecho una consulta sobre LUGAR"]},
+  {"tag": "consulta_tiempo", 
    "patterns": ["¿Sabes cuándo empieza?", "¿Cuándo puedo ir?", "¿Desde qué hora está abierto?", "¿Qué días y horas?", 
                 "Quiero saber cuándo está abierto", "Dime qué días y horas está disponible"], 
-   "responses": ["Ok, has hecho una consulta sobre <TIEMPO>"]}
+   "responses": ["Ok, has hecho una consulta sobre TIEMPO"]},
+   {"tag": "consulta_trivia",
+    "patterns": ["¿Qué me puedes decir sobre este lugar?", "¿Tienes datos sobre este lugar?", "¿Qué sabes sobre este sitio?", 
+                  "Quiero saber más sobre este lugar", "¿Tienes datos curiosos sobre este lugar?"], 
+    "responses": ["¿Sabías que... ?"]}
  ]
 }
