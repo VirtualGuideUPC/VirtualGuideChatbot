@@ -1,8 +1,11 @@
-Chatbot para el proyecto Virtual Guide UPC. Usando redes neuronales, nltk y spacy.
+# Chatbot para el proyecto 'Virtual Guide UPC'. 
+Usando redes neuronales, nltk y spacy.
 
-Necesario en consola para las librerías de training.py:
+## Instalación de las librerías de training.py:
 pip install -U spacy
 python -m spacy download es_core_news_sm
 
-Para utilizar el chatbot únicamente es necesario ejecutar el archivo chatbot.py,
-que lee el modelo guardado en chatbot_model.model
+## Instrucciones de uso
+* Si el archivo intents.json es modificado, ejecutrar preparacion.py y training.py, en ese orden.
+* Utilizar solamente training.py para los cambios en la red neuronal o como referencia para crear otro modelo.
+* Ejecutar chatbot.py para la demostración del chatbot, usando el modelo 'chatbot_model.model'
