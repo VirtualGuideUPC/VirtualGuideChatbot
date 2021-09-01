@@ -1,7 +1,8 @@
 {"intents": 
  [{"tag": "saludos",
    "patterns": ["Hola", "Hey", "Hi", "Buenos días", "Buenas tardes", "Buenas noches", "Buenas", "Buen día", "Saludos", 
-                "Hello", "¿Cómo estás?", "¿Hay alguien ahí?", "Quiero hacer una consulta", "Disculpa, quiero consultar algo"],
+                "Hello", "¿Cómo estás?", "¿Hay alguien ahí?", "Quiero hacer una consulta", "Hola, ¿hay alguien ahí?", 
+                "Disculpa, quiero consultar algo", "Hey, ¿puedo hablar?", "Holi", "Hola, ¿estás ahí?"],
    "responses": ["Hola", "Saludos", "Hola, ¿cómo puedo ayudarte?"]},
    {"tag": "opciones",
     "patterns": ["¿Cómo puedes ayudarme?", "¿Qué puedes hacer?", "¿Cuál es tu utilidad?", "¿Qué haces?"],
