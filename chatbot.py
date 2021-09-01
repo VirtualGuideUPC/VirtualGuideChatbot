@@ -63,6 +63,7 @@ while True:
     ints = predict_class(message)
     """
     Esta sería probablemente la región para fusionar con la base de datos y no usar solo las respuesta de json
+    
     """
     res = get_response(ints, intents)
     print(res)

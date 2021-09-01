@@ -76,6 +76,14 @@ for document in documents:
     output_row[tags.index(document[1])] = 1
     training.append([bag, output_row])
 
+
+"""
+tags = [Saludos, Trivia, ...]
+
+Oracion         Etiqueta
+[0,0,0,1,0]     [0,1]
+"""
+
 random.shuffle(training)
 training = np.array(training)
 
