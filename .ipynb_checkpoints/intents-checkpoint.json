@@ -2,7 +2,7 @@
  [{"tag": "saludos",
    "patterns": ["Hola", "Hey", "Hi", "Buenos días", "Buenas tardes", "Buenas noches", "Buenas", "Buen día", "Saludos", 
                 "Hello", "¿Cómo estás?", "¿Hay alguien ahí?", "Quiero hacer una consulta", "Hola, ¿hay alguien ahí?", 
-                "Disculpa, quiero consultar algo", "Hey, ¿puedo hablar?", "Holi", "Hola, ¿estás ahí?", "Wenas"],
+                "Disculpa, quiero consultar algo", "Hey, ¿puedo hablar?", "Holi", "Hola, ¿estás ahí?"],
    "responses": ["Hola", "Saludos", "Hola, ¿cómo puedo ayudarte?"]},
   {"tag": "opciones",
    "patterns": ["¿Cómo puedes ayudarme?", "¿Qué puedes hacer?", "¿Cuál es tu utilidad?", "¿Qué haces?"],
@@ -24,12 +24,10 @@
                   "Quiero saber más sobre este lugar", "¿Tienes datos curiosos sobre este lugar?"], 
     "responses": ["¿Sabías que... ?"]}, 
   {"tag": "consulta_recomendacion", 
-   "patterns": ["Hola, ¿qué me recomiendas?", "¿Dónde podría ir?", "Recomiéndame un sitio turístico", "Dame una recomendación", 
-                "Quiero conocer un nuevo sitio"],
+   "patterns": ["Hola, ¿qué me recomiendas?"],
    "responses": ["Consulta con Roberto"]},
   {"tag": "consulta_categorias", 
-   "patterns": ["¿Información sobre qué clase de lugares tienes?", "¿Qué tienes en tu base de datos?", "¿Qué clase de lugares hay?",
-  "¿Sobre qué tipos de sitios tienes información?", "¿Qué tipo de lugares turísticos existen?"], 
+   "patterns": ["¿Información sobre qué clase de lugares tienes?", "¿Qué tienes en tu base de datos?"], 
    "responses": ["Tenemos información sobre diversos lugares históricos, sitios relacionados a la arquitectura y espacios urbanos, museos, ferias y mercados, Centros Científicos y Técnicos, zonas paisajísticas, entre otros."] }
  ]
 }

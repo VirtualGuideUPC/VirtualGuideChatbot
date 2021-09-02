@@ -38,7 +38,7 @@ def load_training_data(json_file = "intents.json"):
                 tags.append(intent['tag'])
             # Fin del segundo bucle
         # Fin del primer bucle
-    words = [lemmatizer(word) for word in words if word not in ignore_letters]
+    words = [lemmatizer(word.lower()) for word in words if word not in ignore_letters]
     words = sorted(set(words))
     tags = sorted(set(tags))
     """
