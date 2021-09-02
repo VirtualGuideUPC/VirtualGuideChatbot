@@ -2,10 +2,9 @@
 Usando redes neuronales, nltk y spacy.
 
 ## Instalación de las librerías de training.py:
-pip install -U spacy
-python -m spacy download es_core_news_sm
+* pip install -U spacy
+* python -m spacy download es_core_news_sm
 
 ## Instrucciones de uso
-* Si el archivo intents.json es modificado, ejecutrar preparacion.py y training.py, en ese orden.
-* Utilizar solamente training.py para los cambios en la red neuronal o como referencia para crear otro modelo.
+* Si el archivo intents.json es modificado, ejecutar training.py, que creará la red neuronal con la nueva matriz de entrenamiento.
 * Ejecutar chatbot.py para la demostración del chatbot, usando el modelo 'chatbot_model.model'

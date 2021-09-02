@@ -3,7 +3,7 @@
 import json # Para el formato json
 import codecs # Lectura de caracteres en español
 import pickle
-from google.protobuf import message
+# from google.protobuf import message
 import nltk
 import random
 import numpy as np
@@ -74,12 +74,10 @@ def get_response(intents_list, intents_json):
     # Retornar respuesta de json (String)
     return result
 
-print("Chatbot iniciado!, escribe SALIR para salir :d")
+print("Chatbot iniciado!, escribe lo que desees :)")
 
 while True:
     message = input("")
-    if message == "SALIR":
-        break
     ints = predict_class(message)
     """
     ints: lista de objetos (diccionario). 
@@ -89,3 +87,5 @@ while True:
     """
     res = get_response(ints, intents)
     print(res)
+    if ints[0]['intent'] == "despedida":
+        break
