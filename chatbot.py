@@ -8,7 +8,7 @@ import nltk
 import random
 import numpy as np
 
-from recursos import lemmatizer
+from recursos import lemmatizer, filter, make_keywords
 
 from tensorflow.keras.models import load_model
 
@@ -85,6 +85,11 @@ while True:
     [{'intents': nombre del tag, 'probabilty': resultado de la neurona},
      {...}]
     """
+    aux = filter(message, words) # Filtrar las palabras del json y tener lista
+    aux = ' '.join([word.lower() for word in aux]) # Juntar los tokens en un solo string 
+    tokens = make_keywords(aux)
+    print(tokens)
+
     res = get_response(ints, intents)
     print(res)
     if ints[0]['intent'] == "despedida":

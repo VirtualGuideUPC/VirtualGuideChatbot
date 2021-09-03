@@ -22,6 +22,10 @@ def lemmatizer(text):
     return ' '.join([word.lemma_ for word in doc])
 
 def analyze(text):
+    """
+    Análisis (sintaxis) de la oración para determinar el sujeto, objeto, 'raíz', etc.
+    de una oración (string)
+    """
     doc = nlp(text)
     sentence = next(doc.sents) 
     for word in sentence:
@@ -33,31 +37,31 @@ def filter(text, list_words):
     - text: Oración de entrada
     - list_words: Lista de palabras que se van a eliminar en caso de ocurrencia.
     """
+    ignore_letters = ['¿', '?', '.', ',', ';', '¡', '!', '(', ')']
     text = lemmatizer(text) #... 1. Lematizar
     tokens = nltk.word_tokenize(text) #... 2. Tokenizar para tener una lista de palabras
     bag = []
     for word in tokens:
-        bag if word.lower() in list_words else bag.append(word)
+        bag if word.lower() in list_words or word in ignore_letters else bag.append(word)
     return bag
 
-
-print("GO.")
-while True:
-    sent = input("")
-    texto = filter(sent, words)
-    print(texto)
-    if sent == "SALIR":
-        break
-    texto = ' '.join([word for word in texto])
-    print(texto)
-    analyze(texto)
-
-#doc = nlp(text)
-#sub_toks = [tok for tok in doc if (tok.dep_ == "nsubj") ]
-#print(sub_toks)
+def make_keywords(text):
+    """
+    Recibe texto y crea keywords a partir del atributo word.dep_ de spacy
+    """
+    doc = nlp(text)
+    sub_toks = [tok for tok in doc if (tok.dep_ == "nsubj") or (tok.dep_ == "ROOT") or (tok.dep_ == "flat") ]
+    return sub_toks
 
 """
----------------  Dejar preprocesamiento de data para un notebook y usar el csv / json nomas xd
-ay = pd.read_excel("data_prueba/DBPlaces.xlsx", sheet_name=3, engine='openpyxl')
-print(ay)
+print("GO.")
+while True:
+    text = input("")
+    if text == "SALIR":
+        break
+    text = filter(text, words) # Arreglo (oración tokenizada y filtrada)
+    text = ' '.join([word for word in text]) # Juntar los tokens en un solo string 
+    # analyze(text)
+    tokens = make_keywords(text)
+    print(tokens)
 """
