@@ -65,3 +65,29 @@ while True:
     tokens = make_keywords(text)
     print(tokens)
 """
+
+# SIMULANDO CON DATAFRAMES COMO BASE DE DATOS (?)
+
+fun_facts = pd.read_csv('data_prueba/fun_facts.csv', sep='|')
+
+
+
+def fake_query(keywords, category):
+    # Asumimos que category es trivia xd
+    bs_dataframe = fun_facts
+
+    touristic_places = bs_dataframe['touristic_place_id']
+    touristic_places = set(touristic_places)
+    touristic_places = [place.lower() for place in touristic_places]
+    list_i = [0 for _ in range(len(touristic_places))] # Contador
+    for i in range(len(touristic_places)):
+        for word in keywords:
+            if word in touristic_places[i]:
+                list_i[i] = list_i[i] + 1
+    i = list_i.index(np.max(list_i)) # El índice del lugar que más coincidencias tiene con mis keywords.
+    aux = bs_dataframe[bs_dataframe['touristic_place_id'] == touristic_places[i].upper()]
+    aux = aux['fact']
+    aux = [a for a in aux]
+    return aux
+
+#print(fun_facts[fun_facts['touristic_place_id'] == 'MUSEO DEL BANCO CENTRAL DE RESERVA DEL PERÚ'])

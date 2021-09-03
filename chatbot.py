@@ -8,7 +8,7 @@ import nltk
 import random
 import numpy as np
 
-from recursos import lemmatizer, filter, make_keywords
+from recursos import lemmatizer, filter, make_keywords, fake_query
 
 from tensorflow.keras.models import load_model
 
@@ -88,7 +88,14 @@ while True:
     aux = filter(message, words) # Filtrar las palabras del json y tener lista
     aux = ' '.join([word.lower() for word in aux]) # Juntar los tokens en un solo string 
     tokens = make_keywords(aux)
-    print(tokens)
+    tokens = [str(token) for token in tokens]
+
+    if ints[0]['intent'] == "consulta_trivia":
+        responses = fake_query(tokens, 0)
+        i = random.randint(0, len(responses) - 1)
+        print(responses[i])
+        continue 
+    # print(tokens)
 
     res = get_response(ints, intents)
     print(res)
