@@ -85,18 +85,25 @@ while True:
     [{'intents': nombre del tag, 'probabilty': resultado de la neurona},
      {...}]
     """
-    aux = filter(message, words) # Filtrar las palabras del json y tener lista
+    aux = filter(message, words) # Filtrar las palabras del json y tener lista tokenizada
     aux = ' '.join([word.lower() for word in aux]) # Juntar los tokens en un solo string 
-    tokens = make_keywords(aux)
+    tokens = make_keywords(aux) # Filtrar de nuevo para tener solamente keywords relevantes
     tokens = [str(token) for token in tokens]
-
-    if ints[0]['intent'] == "consulta_trivia":
-        responses = fake_query(tokens, 0)
+    intencion = ints[0]['intent']
+    responses = []
+    if intencion == "consulta_trivia":
+        print("SELECT fact FROM fun_facts WHERE touristic_place_id == %s"%tokens)
+        responses = fake_query(tokens, query_from="fun_facts", column_target="fact")
+    elif intencion == "consulta_lugar":
+        print("SELECT province_id FROM touristic_place WHERE name == %s"%tokens)
+        responses = fake_query(tokens, query_from="touristic_place", column_target="province_id")
+    
+    if len(responses) > 0:
+        print("Hay responses de fake query")
         i = random.randint(0, len(responses) - 1)
         print(responses[i])
-        continue 
-    # print(tokens)
-
+        continue
+    
     res = get_response(ints, intents)
     print(res)
     if ints[0]['intent'] == "despedida":

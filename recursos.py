@@ -50,7 +50,7 @@ def make_keywords(text):
     Recibe texto y crea keywords a partir del atributo word.dep_ de spacy
     """
     doc = nlp(text)
-    sub_toks = [tok for tok in doc if (tok.dep_ == "nsubj") or (tok.dep_ == "ROOT") or (tok.dep_ == "flat") ]
+    sub_toks = [tok for tok in doc if (tok.dep_ == "nsubj") or (tok.dep_ == "ROOT") or (tok.dep_ == "flat") or (tok.dep_ == "dobj")]
     return sub_toks
 
 """
@@ -69,24 +69,34 @@ while True:
 # SIMULANDO CON DATAFRAMES COMO BASE DE DATOS (?)
 
 fun_facts = pd.read_csv('data_prueba/fun_facts.csv', sep='|')
+touristic_place = pd.read_csv('data_prueba/touristic_place.csv', sep='|')
 
 
-
-def fake_query(keywords, category):
-    # Asumimos que category es trivia xd
-    bs_dataframe = fun_facts
-
-    touristic_places = bs_dataframe['touristic_place_id']
-    touristic_places = set(touristic_places)
-    touristic_places = [place.lower() for place in touristic_places]
-    list_i = [0 for _ in range(len(touristic_places))] # Contador
+def fake_query(keywords, query_from: str, column_target: str):
+    """
+    keywords: Lista de keywords del lugar turístico que se quiere buscar
+    query_from: Indica de qué csv (tabla) se va a extraer la información
+    column_target: El nombre de la columna objetivo dentro de la tabla (lo que se va a retornar)
+    """
+    
+    # 1. Preparar Variables
+    bs_dataframe = touristic_place # La tabla de la que se va a consultar
+    column_place_name = "name" # El nombre de la columna que guarda los nombres de los lugares
+    if query_from == "fun_facts":
+        bs_dataframe = fun_facts
+        column_place_name = "touristic_place_id"
+    
+    touristic_places = bs_dataframe[column_place_name] # Arreglo de los nombres de los lugares dentro de la base de datos
+    touristic_places = set(touristic_places) # Conjunto para evitar problemas
+    touristic_places = [place.lower() for place in touristic_places] # Convertir a Lista, en minúscula para que sea par a keywords
+    list_i = [0 for _ in range(len(touristic_places))] # Contador para ver qué instancia (lugar) es el más adecuado según keywords
     for i in range(len(touristic_places)):
         for word in keywords:
             if word in touristic_places[i]:
                 list_i[i] = list_i[i] + 1
     i = list_i.index(np.max(list_i)) # El índice del lugar que más coincidencias tiene con mis keywords.
-    aux = bs_dataframe[bs_dataframe['touristic_place_id'] == touristic_places[i].upper()]
-    aux = aux['fact']
+    aux = bs_dataframe[bs_dataframe[column_place_name] == touristic_places[i].upper()]
+    aux = aux[column_target]
     aux = [a for a in aux]
     return aux
 
