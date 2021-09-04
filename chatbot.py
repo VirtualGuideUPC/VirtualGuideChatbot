@@ -92,19 +92,22 @@ while True:
     intencion = ints[0]['intent']
     responses = []
     if intencion == "consulta_trivia":
-        print("SELECT fact FROM fun_facts WHERE touristic_place_id == %s"%tokens)
+        print(">>> SELECT fact FROM fun_facts WHERE touristic_place_id == %s"%tokens)
         responses = fake_query(tokens, query_from="fun_facts", column_target="fact")
     elif intencion == "consulta_lugar":
-        print("SELECT province_id FROM touristic_place WHERE name == %s"%tokens)
+        print(">>> SELECT province_id FROM touristic_place WHERE name == %s"%tokens)
         responses = fake_query(tokens, query_from="touristic_place", column_target="province_id")
+    elif intencion == "consulta_precio":
+        print(">>> SELECT province_id FROM touristic_place WHERE name == %s"%tokens)
+        responses = fake_query(tokens, query_from="touristic_place", column_target="price")
     
     if len(responses) > 0:
         print("Hay responses de fake query")
         i = random.randint(0, len(responses) - 1)
-        print(responses[i])
+        print(">>", responses[i])
         continue
     
     res = get_response(ints, intents)
-    print(res)
+    print(">>", res)
     if ints[0]['intent'] == "despedida":
         break
