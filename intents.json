@@ -10,8 +10,8 @@
    "responses": ["Soy la guía de Virtual Guide UPC, hecha para responder tus consultas", "Puedo recibir tus consultas sobre turismo", "Puedes preguntarme, por ejemplo: ¿Cómo llego hasta el Museo de Arte de Lima?, y haré mi mejor esfuerzo para responderte"]},
   {"tag": "despedida",
     "patterns": ["Adiós", "chao", "chau", "cciao", "Hasta luego", "bye", "Cerrar", "Bueno, hasta luego", "ok, adiós", "bueno bye", 
-        "Bye, hasta luego", "salir", "terminar"],
-    "responses": ["Ok, hasta luego :)"]},
+        "Bye, hasta luego", "salir", "terminar", "bye bye"],
+    "responses": ["Ok, hasta luego :)", "Hasta pronto", "Cuídate"]},
   {"tag": "consulta_lugar", 
    "patterns": ["¿Sabes donde está?", "¿Dónde queda?", "¿Dónde queda este lugar?", "¿Cómo puedo llegar?", "¿Sabes dónde queda?", 
         "¿me puedes llevar aqui?", "llévame aquí", "dónde es?", "Quiero saber dónde queda", "Dime cómo llegar", 
@@ -37,6 +37,8 @@
   {"tag": "consulta_categorias", 
    "patterns": ["¿Información sobre qué clase de lugares tienes?", "¿Qué tienes en tu base de datos?", "¿Qué clase de lugares hay?",
   "¿Sobre qué tipos de sitios tienes información?", "¿Qué tipo de lugares turísticos existen?"], 
-   "responses": ["Tenemos información sobre diversos lugares históricos, sitios relacionados a la arquitectura y espacios urbanos, museos, ferias y mercados, Centros Científicos y Técnicos, zonas paisajísticas, entre otros."] }
+   "responses": ["Tenemos información sobre diversos lugares históricos, sitios relacionados a la arquitectura y espacios urbanos, museos, ferias y mercados, Centros Científicos y Técnicos, zonas paisajísticas, entre otros."]}, 
+   {"tag": "nulo", "patterns": [" "], 
+    "responses": ["Lo siento, no sé qué me has querido decir", "Por favor, repite tu consulta", "... Lo siento, no entendí"]}
  ]
 }

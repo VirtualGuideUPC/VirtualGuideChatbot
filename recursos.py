@@ -50,7 +50,8 @@ def make_keywords(text):
     Recibe texto y crea keywords a partir del atributo word.dep_ de spacy
     """
     doc = nlp(text)
-    sub_toks = [tok for tok in doc if (tok.dep_ == "nsubj") or (tok.dep_ == "ROOT") or (tok.dep_ == "flat") or (tok.dep_ == "dobj")]
+    # print("Recibí: ", text)
+    sub_toks = [tok for tok in doc if (tok.dep_ == "nsubj") or (tok.dep_ == "ROOT") or (tok.dep_ == "flat") or (tok.dep_ == "dobj") or (tok.dep_ == "amod") or (tok.dep_ == "appos")]
     return sub_toks
 
 """
@@ -61,7 +62,7 @@ while True:
         break
     text = filter(text, words) # Arreglo (oración tokenizada y filtrada)
     text = ' '.join([word for word in text]) # Juntar los tokens en un solo string 
-    # analyze(text)
+    analyze(text)
     tokens = make_keywords(text)
     print(tokens)
 """
@@ -94,8 +95,13 @@ def fake_query(keywords, query_from: str, column_target: str):
         for word in keywords:
             if word in touristic_places[i]:
                 list_i[i] = list_i[i] + 1
-    i = list_i.index(np.max(list_i)) # El índice del lugar que más coincidencias tiene con mis keywords.
+    aux = np.max(list_i) # Máximo valor en el contador
+    if aux == 0:
+        return list([]) # Si hay 0 resultados, regresa
+    i = list_i.index(aux) # El índice del lugar que más coincidencias tiene con mis keywords.
+    print("> Lugar: ", touristic_places[i].upper())
     aux = bs_dataframe[bs_dataframe[column_place_name] == touristic_places[i].upper()]
+    print(aux)
     aux = aux[column_target]
     aux = [a for a in aux]
     return aux
