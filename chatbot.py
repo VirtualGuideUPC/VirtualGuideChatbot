@@ -7,6 +7,7 @@ import pickle
 import nltk
 import random
 import numpy as np
+from numpy.lib.function_base import place
 
 from recursos import lemmatizer, filter, make_keywords, fake_query
 
@@ -74,9 +75,10 @@ def get_response(intents_list, intents_json):
     # Retornar respuesta de json (String)
     return result
 
-print("Chatbot iniciado!, escribe lo que desees :)")
+print("Hola! Soy A.V.T... El Asistente Virtual de Turismo, dime, ¿qué puedo hacer por ti?")
 
 while True:
+    place_context = " " # Contexto: (Para continuar consultas sobre un mismo lugar :p)
     message = input("")
     ints = predict_class(message)
     """
@@ -85,28 +87,37 @@ while True:
     [{'intents': nombre del tag, 'probabilty': resultado de la neurona},
      {...}]
     """
-    aux = filter(message, words) # Filtrar las palabras del json y tener lista tokenizada
+    aux = filter(message, words) # Filtrar las palabras (quitar las del json) y tener lista tokenizada
     aux = ' '.join([word.lower() for word in aux]) # Juntar los tokens en un solo string 
     tokens = make_keywords(aux) # Filtrar de nuevo para tener solamente keywords relevantes
-    tokens = [str(token) for token in tokens]
+    tokens = [str(token) for token in tokens] # e.g.: ['Museo', 'arte', 'lima']
+
+    if len(tokens) == 0:
+        # Si no hay keywords, asumimos que sigue hablando del mismo lugar que antes
+        tokens = list(place_context)
+
     intencion = ints[0]['intent']
     responses = []
     if intencion == "consulta_trivia":
-        print(">>> SELECT fact FROM fun_facts WHERE touristic_place_id == %s"%tokens)
+        #print(">>> SELECT fact FROM fun_facts WHERE touristic_place_id == %s"%tokens)
         responses = fake_query(tokens, query_from="fun_facts", column_target="fact")
     elif intencion == "consulta_lugar":
-        print(">>> SELECT province_id FROM touristic_place WHERE name == %s"%tokens)
+        #print(">>> SELECT province_id FROM touristic_place WHERE name == %s"%tokens)
         responses = fake_query(tokens, query_from="touristic_place", column_target="province_id")
     elif intencion == "consulta_tiempo":
-        print(">>> SELECT schedule_info FROM touristic_place WHERE name == %s"%tokens)
+        #print(">>> SELECT schedule_info FROM touristic_place WHERE name == %s"%tokens)
         responses = fake_query(tokens, query_from="touristic_place", column_target="schedule_info")
     elif intencion == "consulta_precio":
-        print(">>> SELECT price FROM touristic_place WHERE name == %s"%tokens)
+        #print(">>> SELECT price FROM touristic_place WHERE name == %s"%tokens)
         responses = fake_query(tokens, query_from="touristic_place", column_target="price")
     
     if len(responses) > 0:
-        i = random.randint(0, len(responses) - 1)
-        print(">>", responses[i])
+        # Si se hizo una consulta que sí devuelve info:
+        i = random.randint(0, len(responses) - 1) # Elegir respuesta al azar
+        if intencion == "consulta_lugar":
+            print(">> No tengo GPS, pero sé que queda en %s"%responses[i])
+        print(responses[i])
+        place_context = tokens # El nuevo contexto son las palabras clave
         continue
     
     res = get_response(ints, intents)

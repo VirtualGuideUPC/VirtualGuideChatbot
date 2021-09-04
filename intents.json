@@ -33,7 +33,7 @@
   {"tag": "consulta_recomendacion", 
    "patterns": ["Hola, ¿qué me recomiendas?", "¿Dónde podría ir?", "Recomiéndame un sitio turístico", "Dame una recomendación", 
                 "Quiero conocer un nuevo sitio", "Dime, qué me recomiendas hacer?"],
-   "responses": ["Consulta con Roberto"]},
+   "responses": ["Consulta con Roberto", "No importa, todo sucede porque así lo quiso la sagrada línea del tiempo"]},
   {"tag": "consulta_categorias", 
    "patterns": ["¿Información sobre qué clase de lugares tienes?", "¿Qué tienes en tu base de datos?", "¿Qué clase de lugares hay?",
   "¿Sobre qué tipos de sitios tienes información?", "¿Qué tipo de lugares turísticos existen?"], 
