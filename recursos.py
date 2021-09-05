@@ -104,7 +104,8 @@ def fake_query(keywords, query_from: str, column_target: str, place_context: str
         i = list_i.index(aux) # El índice del lugar que más coincidencias tiene con mis keywords.
         place_context = touristic_places[i].upper()
         print("> Lugar: ", place_context)
-
+    
+    print("... Contexto:", place_context)
     aux = bs_dataframe[bs_dataframe[column_place_name] == place_context]
     aux = aux[column_target]
     aux = [a for a in aux]

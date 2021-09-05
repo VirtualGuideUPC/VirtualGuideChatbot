@@ -51,6 +51,15 @@ def load_training_data(json_file = "intents.json"):
 
 words, tags, documents = load_training_data()
 print("intents.json cargado")
+print("Palabras detectadas:", len(words))
+print("Intenciones detectadas:", len(tags))
+
+if "hola" in words:
+    aux = words.index("hola")
+    print(words[aux])
+if "bye" in words:
+    aux = words.index("bye")
+    print(words[aux])
 
 # ... Guardarlos
 pickle.dump(words, open('words.pkl', 'wb'))

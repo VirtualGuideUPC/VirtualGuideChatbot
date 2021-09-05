@@ -77,9 +77,10 @@ def get_response(intents_list, intents_json):
 
 print("Hola! Soy A.V.T... El Asistente Virtual de Turismo, dime, ¿qué puedo hacer por ti?")
 
+place_context = " " # Contexto: (Para continuar consultas sobre un mismo lugar :p)
 while True:
-    place_context = " " # Contexto: (Para continuar consultas sobre un mismo lugar :p)
     message = input("")
+    message = message.lower()
     ints = predict_class(message)
     """
     ints: lista de objetos (diccionario). 
