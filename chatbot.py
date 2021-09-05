@@ -92,32 +92,27 @@ while True:
     tokens = make_keywords(aux) # Filtrar de nuevo para tener solamente keywords relevantes
     tokens = [str(token) for token in tokens] # e.g.: ['Museo', 'arte', 'lima']
 
-    if len(tokens) == 0:
-        # Si no hay keywords, asumimos que sigue hablando del mismo lugar que antes
-        tokens = list(place_context)
-
     intencion = ints[0]['intent']
     responses = []
     if intencion == "consulta_trivia":
         #print(">>> SELECT fact FROM fun_facts WHERE touristic_place_id == %s"%tokens)
-        responses = fake_query(tokens, query_from="fun_facts", column_target="fact")
+        responses, place_context = fake_query(tokens, query_from="fun_facts", column_target="fact", place_context=place_context)
     elif intencion == "consulta_lugar":
         #print(">>> SELECT province_id FROM touristic_place WHERE name == %s"%tokens)
-        responses = fake_query(tokens, query_from="touristic_place", column_target="province_id")
+        responses, place_context = fake_query(tokens, query_from="touristic_place", column_target="province_id", place_context=place_context)
     elif intencion == "consulta_tiempo":
         #print(">>> SELECT schedule_info FROM touristic_place WHERE name == %s"%tokens)
-        responses = fake_query(tokens, query_from="touristic_place", column_target="schedule_info")
+        responses, place_context = fake_query(tokens, query_from="touristic_place", column_target="schedule_info", place_context=place_context)
     elif intencion == "consulta_precio":
         #print(">>> SELECT price FROM touristic_place WHERE name == %s"%tokens)
-        responses = fake_query(tokens, query_from="touristic_place", column_target="price")
+        responses, place_context = fake_query(tokens, query_from="touristic_place", column_target="price", place_context=place_context)
     
     if len(responses) > 0:
         # Si se hizo una consulta que sí devuelve info:
         i = random.randint(0, len(responses) - 1) # Elegir respuesta al azar
         if intencion == "consulta_lugar":
             print(">> No tengo GPS, pero sé que queda en %s"%responses[i])
-        print(responses[i])
-        place_context = tokens # El nuevo contexto son las palabras clave
+        print(">> ", responses[i])
         continue
     
     res = get_response(ints, intents)
