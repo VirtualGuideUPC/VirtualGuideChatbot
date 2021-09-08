@@ -7,6 +7,8 @@ import pandas as pd
 import nltk # Natural Language ToolKit: Tokenizar
 import pickle
 
+import geocoder
+
 # Preparación
 nltk.download('punkt')
 nlp = spacy.load('es_core_news_sm') # Procesamiento de Lenguaje con base al español
@@ -17,20 +19,24 @@ def lemmatizer(text):
     """
     - text: Texto de entrada
     Retorna string de la misma oración con cada palabra lematizada
+    E.g: "Buenos días" -> "Buen día"
     """
     doc = nlp(text)
     return ' '.join([word.lemma_ for word in doc])
 
+# Nota: Usar para inspeccionar la estructura de una oración de entrada. Actualmente no es llamada por ningún método.
 def analyze(text):
     """
     Análisis (sintaxis) de la oración para determinar el sujeto, objeto, 'raíz', etc.
     de una oración (string)
+    NOTA: Es simplemente un print de cada palabra en una oración, con su atributo
     """
     doc = nlp(text)
     sentence = next(doc.sents) 
     for word in sentence:
         print("%s:%s" % (word,word.dep_))
 
+# Filtro: Recibe una oración (text), a la que se le quitan las palabras baneadas en (list_words)
 def filter(text, list_words):
     """
     Filtra las palabras de una oración, lematizando y quitando aquellas que sean parte del arreglo global words.
@@ -45,32 +51,33 @@ def filter(text, list_words):
         bag if word.lower() in list_words or word in ignore_letters else bag.append(word)
     return bag
 
+# A partir del análisis sintáctico (librería spacy), rescata las más importantes palabras en una oración (text)
 def make_keywords(text):
     """
     Recibe texto y crea keywords a partir del atributo word.dep_ de spacy
+    - text: Oración de entrada. (e.g: "Museo de arte de Lima")
+    Retorna
+    - sub_toks: Lista de palabras clave. (e.g: ["Museo", "Arte", "Lima"] )
     """
     doc = nlp(text)
     # print("Recibí: ", text)
     sub_toks = [tok for tok in doc if (tok.dep_ == "nsubj") or (tok.dep_ == "ROOT") or (tok.dep_ == "flat") or (tok.dep_ == "dobj") or (tok.dep_ == "amod") or (tok.dep_ == "appos")]
     return sub_toks
 
-"""
-print("GO.")
-while True:
-    text = input("")
-    if text == "SALIR":
-        break
-    text = filter(text, words) # Arreglo (oración tokenizada y filtrada)
-    text = ' '.join([word for word in text]) # Juntar los tokens en un solo string 
-    analyze(text)
-    tokens = make_keywords(text)
-    print(tokens)
-"""
-
-# SIMULANDO CON DATAFRAMES COMO BASE DE DATOS (?)
+#================= ESTO ES LO 'SIMULADO' ==============
 
 fun_facts = pd.read_csv('data_prueba/fun_facts.csv', sep='|')
 touristic_place = pd.read_csv('data_prueba/touristic_place.csv', sep='|')
+
+# OJO: Usa el par (latitud, longitud) de quien esté ejecutando esto.
+# TO DO: Investigar en la documentación de geocoder para la comunicación frontend-backend
+def get_user_location():
+    """
+    Propuesta: Trabajar con GeoCoder para tener la ubicación en formato
+    Retorna: [Latitud, Longitud] (e.g: lista de [-12.0432, -77.0282]), como np.array para hacer distancia euclidiana
+    """
+    g = geocoder.ip('me')
+    return np.array(g.latlng)
 
 
 def fake_query(keywords, query_from: str, column_target: str, place_context: str):
@@ -87,7 +94,7 @@ def fake_query(keywords, query_from: str, column_target: str, place_context: str
         bs_dataframe = fun_facts
         column_place_name = "touristic_place_id"
     
-    if place_context == " ":
+    if place_context == " " or len(keywords) > 0:
         # Si NO hay contexto
         # 2. Buscar las instancias de la tabla que contengan las keywords:
         touristic_places = bs_dataframe[column_place_name] # Arreglo de los nombres de los lugares dentro de la base de datos
@@ -111,4 +118,5 @@ def fake_query(keywords, query_from: str, column_target: str, place_context: str
     aux = [a for a in aux]
     return aux, place_context
 
+print(get_user_location())
 #print(fun_facts[fun_facts['touristic_place_id'] == 'MUSEO DEL BANCO CENTRAL DE RESERVA DEL PERÚ'])

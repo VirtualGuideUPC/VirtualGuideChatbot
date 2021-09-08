@@ -77,6 +77,8 @@ def get_response(intents_list, intents_json):
 
 print("Hola! Soy A.V.T... El Asistente Virtual de Turismo, dime, ¿qué puedo hacer por ti?")
 
+# user_location = #get_location()
+
 place_context = " " # Contexto: (Para continuar consultas sobre un mismo lugar :p)
 while True:
     message = input("")
