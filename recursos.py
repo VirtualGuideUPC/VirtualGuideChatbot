@@ -51,6 +51,19 @@ def filter(text, list_words):
         bag if word.lower() in list_words or word in ignore_letters else bag.append(word)
     return bag
 
+# Quita las tildes con un simple LUT (Tal vez puede mejorarse)
+def normalize_tilde(s):
+    replacements = (
+        ("á", "a"),
+        ("é", "e"),
+        ("í", "i"),
+        ("ó", "o"),
+        ("ú", "u"),
+    )
+    for a, b in replacements:
+        s = s.replace(a, b).replace(a.upper(), b.upper())
+    return s
+
 # A partir del análisis sintáctico (librería spacy), rescata las más importantes palabras en una oración (text)
 def make_keywords(text):
     """
@@ -61,7 +74,7 @@ def make_keywords(text):
     """
     doc = nlp(text)
     # print("Recibí: ", text)
-    sub_toks = [tok for tok in doc if (tok.dep_ == "nsubj") or (tok.dep_ == "ROOT") or (tok.dep_ == "flat") or (tok.dep_ == "dobj") or (tok.dep_ == "amod") or (tok.dep_ == "appos")]
+    sub_toks = [normalize_tilde(str(tok)) for tok in doc if (tok.dep_ == "nsubj") or (tok.dep_ == "ROOT") or (tok.dep_ == "flat") or (tok.dep_ == "dobj") or (tok.dep_ == "amod") or (tok.dep_ == "appos")]
     return sub_toks
 
 #================= ESTO ES LO 'SIMULADO' ==============
@@ -79,6 +92,13 @@ def get_user_location():
     g = geocoder.ip('me')
     return np.array(g.latlng)
 
+"""
+Propuesta: Mezclar fake_query con query_near:
+* Añadir al DataFrame una columna 'score'.
+* score se calcula a partir de lambdas {1: Coincidencias entre el nombre y keywords. 2: Distancia Euclidiana}
+* Ordenar de mayor a menor score.
+* Retornar el mayor o mayores instancias según dicho orden.
+"""
 
 def fake_query(keywords, query_from: str, column_target: str, place_context: str):
     """
@@ -99,11 +119,11 @@ def fake_query(keywords, query_from: str, column_target: str, place_context: str
         # 2. Buscar las instancias de la tabla que contengan las keywords:
         touristic_places = bs_dataframe[column_place_name] # Arreglo de los nombres de los lugares dentro de la base de datos
         touristic_places = set(touristic_places) # Conjunto para evitar problemas
-        touristic_places = [place.lower() for place in touristic_places] # Convertir a Lista, en minúscula para que sea par a keywords
+        touristic_places = [normalize_tilde(place) for place in touristic_places] # Convertir a Lista, Sin tildes para la búsqueda por keywords
         list_i = [0 for _ in range(len(touristic_places))] # Contador para ver qué instancia (lugar) es el más adecuado según keywords
         for i in range(len(touristic_places)):
             for word in keywords:
-                if word in touristic_places[i]:
+                if word.upper() in touristic_places[i]:
                     list_i[i] = list_i[i] + 1
         aux = np.max(list_i) # Máximo valor en el contador
         if aux == 0:
@@ -118,5 +138,19 @@ def fake_query(keywords, query_from: str, column_target: str, place_context: str
     aux = [a for a in aux]
     return aux, place_context
 
-print(get_user_location())
+# AHH
+def query_near():
+    longitudes = touristic_place['longitude']
+    latitudes = touristic_place['latitude']
+    distancia = []
+    for i in range(len(longitudes)):
+        dist = np.linalg.norm(get_user_location()-np.array([longitudes[i], latitudes[i]]))
+        distancia.append(dist)
+    touristic_place["Distancia"] = distancia # Añade columna de distancia euclidiana
+    aux = touristic_place.sort_values(by=['Distancia'])
+    # Retorna el más cercano
+    return aux['name'][0] 
+
+#print(fake_query(["Perú", "Museo", "Banco", "Central", "Reserva"], "fun_facts", "fact", " "))
+
 #print(fun_facts[fun_facts['touristic_place_id'] == 'MUSEO DEL BANCO CENTRAL DE RESERVA DEL PERÚ'])
