@@ -139,18 +139,24 @@ def fake_query(keywords, query_from: str, column_target: str, place_context: str
     return aux, place_context
 
 # AHH
-def query_near():
+def query_near(user_location: np.array):
+    """
+    user_location: Coordenadas del usuario, en forma np.array([longitud, latitud])
+    """
     longitudes = touristic_place['longitude']
     latitudes = touristic_place['latitude']
     distancia = []
     for i in range(len(longitudes)):
-        dist = np.linalg.norm(get_user_location()-np.array([longitudes[i], latitudes[i]]))
+        dist = np.linalg.norm(user_location-np.array([longitudes[i], latitudes[i]]))
         distancia.append(dist)
     touristic_place["Distancia"] = distancia # Añade columna de distancia euclidiana
+    #print(touristic_place.head(5))
     aux = touristic_place.sort_values(by=['Distancia'])
-    # Retorna el más cercano
-    return aux['name'][0] 
+    #print("======")
+    #print(aux.head(5))
+    #... Retorna el más cercano
+    return aux.values[0][0] # Asumimos que == [0]['name'], retorna el string con el nombre de lugar
 
+#print(query_near(get_user_location()))
+#print(query_near(np.array([-12.06,-77.04])))
 #print(fake_query(["Perú", "Museo", "Banco", "Central", "Reserva"], "fun_facts", "fact", " "))
-
-#print(fun_facts[fun_facts['touristic_place_id'] == 'MUSEO DEL BANCO CENTRAL DE RESERVA DEL PERÚ'])

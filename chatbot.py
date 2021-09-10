@@ -9,7 +9,7 @@ import random
 import numpy as np
 from numpy.lib.function_base import place
 
-from recursos import lemmatizer, filter, make_keywords, fake_query
+from recursos import get_user_location, lemmatizer, filter, make_keywords, fake_query, query_near
 
 from tensorflow.keras.models import load_model
 
@@ -109,7 +109,12 @@ while True:
     elif intencion == "consulta_precio":
         #print(">>> SELECT price FROM touristic_place WHERE name == %s"%tokens)
         responses, place_context = fake_query(tokens, query_from="touristic_place", column_target="price", place_context=place_context)
-    
+    elif intencion == "consulta_lugares_cerca":
+        responses = query_near(get_user_location())
+        place_context = responses
+        print("Encontré... %s"%responses)
+        continue
+
     if len(responses) > 0:
         # Si se hizo una consulta que sí devuelve info:
         i = random.randint(0, len(responses) - 1) # Elegir respuesta al azar
