@@ -77,53 +77,61 @@ def get_response(intents_list, intents_json):
 
 print("Hola! Soy A.V.T... El Asistente Virtual de Turismo, dime, ¿qué puedo hacer por ti?")
 
-# user_location = #get_location()
 
-place_context = " " # Contexto: (Para continuar consultas sobre un mismo lugar :p)
-while True:
-    message = input("")
-    message = message.lower()
-    ints = predict_class(message)
-    """
-    ints: lista de objetos (diccionario). 
-    Ejemplo: ints =
-    [{'intents': nombre del tag, 'probabilty': resultado de la neurona},
-     {...}]
-    """
-    aux = filter(message, words) # Filtrar las palabras (quitar las del json) y tener lista tokenizada
-    aux = ' '.join([word.lower() for word in aux]) # Juntar los tokens en un solo string 
-    tokens = make_keywords(aux) # Filtrar de nuevo para tener solamente keywords relevantes
-    tokens = [str(token) for token in tokens] # e.g.: ['Museo', 'arte', 'lima']
+class ChatBot:
+    def __init__(self, msg, place_context):
+        self.message = msg
+        self.message = self.message.lower()
+        self.ints = predict_class(self.message)
+        self.place_context = place_context
+        self.responses = []
+        self.intencion = self.ints[0]['intent']
+        self.res = "no fuciona"
+        """
+        ints: lista de objetos (diccionario). 
+        Ejemplo: ints =
+        [{'intents': nombre del tag, 'probabilty': resultado de la neurona},
+        {...}]
+        """
+    def create_response(self):
+        aux = filter(self.message, words)# Filtrar las palabras (quitar las del json) y tener lista tokenizada
+        aux = ' '.join([word.lower() for word in aux])# Juntar los tokens en un solo string
+        tokens = make_keywords(aux)# Filtrar de nuevo para tener solamente keywords relevantes
+        tokens = [str(token) for token in tokens]# e.g.: ['Museo', 'arte', 'lima']
 
-    intencion = ints[0]['intent']
-    responses = []
-    if intencion == "consulta_trivia":
-        #print(">>> SELECT fact FROM fun_facts WHERE touristic_place_id == %s"%tokens)
-        responses, place_context = fake_query(tokens, query_from="fun_facts", column_target="fact", place_context=place_context)
-    elif intencion == "consulta_lugar":
-        #print(">>> SELECT province_id FROM touristic_place WHERE name == %s"%tokens)
-        responses, place_context = fake_query(tokens, query_from="touristic_place", column_target="province_id", place_context=place_context)
-    elif intencion == "consulta_tiempo":
-        #print(">>> SELECT schedule_info FROM touristic_place WHERE name == %s"%tokens)
-        responses, place_context = fake_query(tokens, query_from="touristic_place", column_target="schedule_info", place_context=place_context)
-    elif intencion == "consulta_precio":
-        #print(">>> SELECT price FROM touristic_place WHERE name == %s"%tokens)
-        responses, place_context = fake_query(tokens, query_from="touristic_place", column_target="price", place_context=place_context)
-    elif intencion == "consulta_lugares_cerca":
-        responses = query_near(get_user_location())
-        place_context = responses
-        print("Encontré... %s"%responses)
-        continue
+        #intencion = self.ints[0]['intent']
+        # responses = []
+        if self.intencion == "consulta_trivia":
+            # print(">>> SELECT fact FROM fun_facts WHERE touristic_place_id == %s"%tokens)
+            self.responses, self.place_context = fake_query(tokens, query_from="fun_facts", column_target="fact",
+                                                  place_context=self.place_context)
+        elif self.intencion == "consulta_lugar":
+            # print(">>> SELECT province_id FROM touristic_place WHERE name == %s"%tokens)
+            self.responses, self.place_context = fake_query(tokens, query_from="touristic_place", column_target="province_id",
+                                                  place_context=self.place_context)
+        elif self.intencion == "consulta_tiempo":
+            # print(">>> SELECT schedule_info FROM touristic_place WHERE name == %s"%tokens)
+            self.responses, self.place_context = fake_query(tokens, query_from="touristic_place", column_target="schedule_info",
+                                                  place_context=self.place_context)
+        elif self.intencion == "consulta_precio":
+            # print(">>> SELECT price FROM touristic_place WHERE name == %s"%tokens)
+            self.responses, self.place_context = fake_query(tokens, query_from="touristic_place", column_target="price",
+                                                  place_context=self.place_context)
+        elif self.intencion == "consulta_lugares_cerca":
+            self.responses = query_near(get_user_location())
+            self.place_context = self.responses
+            print("Encontré... %s" % self.responses)
 
-    if len(responses) > 0:
-        # Si se hizo una consulta que sí devuelve info:
-        i = random.randint(0, len(responses) - 1) # Elegir respuesta al azar
-        if intencion == "consulta_lugar":
-            print(">> No tengo GPS, pero sé que queda en %s"%responses[i])
-        print(">> ", responses[i])
-        continue
-    
-    res = get_response(ints, intents)
-    print(">>", res)
-    if ints[0]['intent'] == "despedida":
-        break
+
+    def select_response(self):
+        if len(self.responses) > 0:
+            # Si se hizo una consulta que sí devuelve info:
+            i = random.randint(0, len(self.responses) - 1)  # Elegir respuesta al azar
+            if self.intencion == "consulta_lugar":
+                print(">> No tengo GPS, pero sé que queda en %s" % self.responses[i])
+            print(">> ", self.responses[i])
+            self.res = self.responses[i]
+        else:
+            self.res = get_response(self.ints, intents)
+            print(">>", self.res)
+            # if ints[0]['intent'] == "despedida":
