@@ -9,7 +9,7 @@ import random
 import numpy as np
 from numpy.lib.function_base import place
 
-from recursos import get_user_location, lemmatizer, filter, make_keywords, fake_query, query_near
+from recursos import get_user_location, lemmatizer, filter, make_keywords, fake_query, query_near, select_names, new_query
 
 from tensorflow.keras.models import load_model
 
@@ -77,7 +77,6 @@ def get_response(intents_list, intents_json):
 
 print("Hola! Soy A.V.T... El Asistente Virtual de Turismo, dime, ¿qué puedo hacer por ti?")
 
-
 class ChatBot:
     def __init__(self, msg, place_context):
         self.message = msg
@@ -94,29 +93,66 @@ class ChatBot:
         {...}]
         """
     def create_response(self):
-        aux = filter(self.message, words)# Filtrar las palabras (quitar las del json) y tener lista tokenizada
+        aux = filter(self.message, words) # Filtrar las palabras (quitar las del json) y tener lista tokenizada
         aux = ' '.join([word.lower() for word in aux])# Juntar los tokens en un solo string
         tokens = make_keywords(aux)# Filtrar de nuevo para tener solamente keywords relevantes
         tokens = [str(token) for token in tokens]# e.g.: ['Museo', 'arte', 'lima']
 
-        #intencion = self.ints[0]['intent']
-        # responses = []
+        # USAR KEYWORDS para especificar cuál es el lugar del que palabra:
+        place_candidates = select_names(keywords=tokens, place_context=self.place_context) # Lista de lugares candidatos
+        if len(place_candidates) == 1:
+            self.place_context = place_candidates[0]
+        else:
+            # Fix actual: Elige el lugar usando el 
+            print(">> Quiero asegurarme de entenderte bien, ¿a cuál de estos lugares te refieres? \n %s"%place_candidates)
+            message = input("(Por favor, escríbelo exactamente como está en la lista)")
+            for p in place_candidates:
+                if p == message:
+                    self.place_context = p
+                break        
+        aux_context = "'%s'"%self.place_context
+
         if self.intencion == "consulta_trivia":
+            """
             # print(">>> SELECT fact FROM fun_facts WHERE touristic_place_id == %s"%tokens)
             self.responses, self.place_context = fake_query(tokens, query_from="fun_facts", column_target="fact",
                                                   place_context=self.place_context)
+            """
+            self.responses = new_query(select_column=['fact'], from_data = "fun_facts", where_pairs=[("touristic_place_id", aux_context)])
+            self.responses = [trivia for trivia in self.responses['fact']]
         elif self.intencion == "consulta_lugar":
+            """
             # print(">>> SELECT province_id FROM touristic_place WHERE name == %s"%tokens)
             self.responses, self.place_context = fake_query(tokens, query_from="touristic_place", column_target="province_id",
                                                   place_context=self.place_context)
+            """
+            self.responses = new_query(select_column=['longitude', 'latitude'], from_data = "touristic_place", where_pairs=[("name", aux_context)])
+            if len(self.responses) > 0:
+                self.responses = ["Las coordenadas de %s son (%s, %s)"%(self.place_context, self.responses.values[0][0], self.responses.values[0][1])]
+            else:
+                self.responses = []
         elif self.intencion == "consulta_tiempo":
+            """
             # print(">>> SELECT schedule_info FROM touristic_place WHERE name == %s"%tokens)
             self.responses, self.place_context = fake_query(tokens, query_from="touristic_place", column_target="schedule_info",
                                                   place_context=self.place_context)
+            """
+            self.responses = new_query(['schedule_info'], "touristic_place", [("name", aux_context)])
+            if len(self.responses) > 0:
+                self.responses = [self.responses.values[0][0]]
+            else: 
+                self.responses = []
         elif self.intencion == "consulta_precio":
+            """
             # print(">>> SELECT price FROM touristic_place WHERE name == %s"%tokens)
             self.responses, self.place_context = fake_query(tokens, query_from="touristic_place", column_target="price",
                                                   place_context=self.place_context)
+            self.responses = new_query(['cost_info', 'price'], "touristic_place", [("name", aux_context)])
+            """
+            if len(self.responses) > 0:
+                self.responses = ["%s; con precio de %s"%(self.responses.values[0][0], self.responses.values[0][1])]
+            else: 
+                self.responses = []
         elif self.intencion == "consulta_lugares_cerca":
             self.responses = query_near(get_user_location())
             self.place_context = self.responses
@@ -127,11 +163,8 @@ class ChatBot:
         if len(self.responses) > 0:
             # Si se hizo una consulta que sí devuelve info:
             i = random.randint(0, len(self.responses) - 1)  # Elegir respuesta al azar
-            if self.intencion == "consulta_lugar":
-                print(">> No tengo GPS, pero sé que queda en %s" % self.responses[i])
             print(">> ", self.responses[i])
             self.res = self.responses[i]
         else:
             self.res = get_response(self.ints, intents)
             print(">>", self.res)
-            # if ints[0]['intent'] == "despedida":
