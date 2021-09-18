@@ -113,13 +113,13 @@ while True:
         place_context = place_candidates[0]
     else:
         print(">> Quiero asegurarme de entenderte bien, ¿a cuál de estos lugares te refieres?")
-        print(place_candidates)
-        message = input("(Por favor, escríbelo exactamente como está en la lista)")
-        for p in place_candidates:
-            if p == message:
-                place_context = p
-                break
+        for i in range(len(place_candidates)):
+            print("%s: %s"%(i, place_candidates[i]))
+        message = input("... Por favor, escribe el número: ")
+        place_context = place_candidates[int(message)]
     aux_context = "'%s'"%place_context
+    responses = [] # Por defecto, 0 respuestas
+
     if intencion == "consulta_trivia":
         #responses, place_context = fake_query(tokens, query_from="fun_facts", column_target="fact", place_context=place_context)
         responses = new_query(select_column=['fact'], from_data = "fun_facts", where_pairs=[("touristic_place_id", aux_context)])
@@ -129,23 +129,17 @@ while True:
         responses = new_query(select_column=['longitude', 'latitude'], from_data = "touristic_place", where_pairs=[("name", aux_context)])
         if len(responses) > 0:
             responses = ["Las coordenadas de %s son (%s, %s)"%(place_context, responses.values[0][0], responses.values[0][1])]
-        else:
-            responses = []
     elif intencion == "consulta_tiempo":
         #responses, place_context = fake_query(tokens, query_from="touristic_place", column_target="schedule_info", place_context=place_context)
         responses = new_query(['schedule_info'], "touristic_place", [("name", aux_context)])
         if len(responses) > 0:
             responses = [responses.values[0][0]]
-        else: 
-            responses = []
     elif intencion == "consulta_precio":
         #print(">>> SELECT price FROM touristic_place WHERE name == %s"%tokens)
         #responses, place_context = fake_query(tokens, query_from="touristic_place", column_target="price", place_context=place_context)
         responses = new_query(['cost_info', 'price'], "touristic_place", [("name", aux_context)])
         if len(responses) > 0:
             responses = ["%s; con precio de %s"%(responses.values[0][0], responses.values[0][1])]
-        else: 
-            responses = []
     #...
     if len(responses) > 0:
         # Si se hizo una consulta que sí devuelve info:
@@ -155,5 +149,3 @@ while True:
     # Por defecto (0 respuestas)
     res = get_response(ints, intents)
     print(">>", res)
-    if ints[0]['intent'] == "despedida":
-        break
