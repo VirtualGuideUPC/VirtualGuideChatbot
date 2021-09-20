@@ -140,6 +140,9 @@ while True:
         responses = new_query(['cost_info', 'price'], "touristic_place", [("name", aux_context)])
         if len(responses) > 0:
             responses = ["%s; con precio de %s"%(responses.values[0][0], responses.values[0][1])]
+    elif intencion == "contexto":
+        if place_context != " ":
+            responses = [place_context]
     #...
     if len(responses) > 0:
         # Si se hizo una consulta que sí devuelve info:
