@@ -2,6 +2,7 @@ from flask import Flask, request, session
 from flask_restful import Api, Resource
 from flask import jsonify
 from flask_restful.utils import cors
+import requests
 import json
 from flask_cors import CORS
 from chatbot import ChatBot
@@ -38,7 +39,8 @@ class Prediction(Resource):
         else:
             place_context = " "
 
-        msg = request.json['msg']
+        #changed 'msg' to 'text' according to rest api model
+        msg = request.json['text']
         cb = ChatBot(msg, place_context)
         cb.create_response()
         cb.select_response()
@@ -60,11 +62,48 @@ class Prediction(Resource):
         print("context:")
         print(place_context)
 
-        response = {
-            'msg': message
+        #Post to API
+        url="http://ec2-34-226-195-132.compute-1.amazonaws.com/api/users/message/create/"
+        payload=json.dumps(request.json)
+        headers={
+            'Content-Type': 'application/json'
         }
+        apiresponse=requests.request("POST",url,headers=headers, data=payload)
+        if apiresponse.ok:
+            request.json['text']=message
+            request.json['is_user']=False
+            payloadbot=json.dumps(request.json)
+            apiresponsebot=requests.request("POST",url,headers=headers,data=payloadbot)
+            print(apiresponse.json())
+            if apiresponsebot.ok:
+                response={
+                    'human_message':apiresponse.json(),
+                    'robot_response':apiresponsebot.json()
+                }
+                print(apiresponsebot.json())
+                return jsonify(to_dict(response))
+            else:
+                response={
+                    'human_message':apiresponse.json(),
+                    'robot_response': 'error posting response to db'
+                }
+                return jsonify(to_dict(response))
+        else:
+            response={
+                'human_message':'error posting message to db'
+            }
+            return jsonify(to_dict(response))
+        
+        
+        
 
-        return jsonify(to_dict(response))
+
+        # response = {
+        #     'msg': message
+        # }
+
+        # print(request.json)
+        # return jsonify(to_dict(response))
 
 
 class PopCookie(Resource):
