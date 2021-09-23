@@ -166,7 +166,7 @@ class ChatBot:
             self.create_response()
             #print("Responses after that: ", self.responses)
             self.select_response()
-            print(self.res)
+            print(">>", self.res)
             if self.intencion == "despedida":
                 break
         return 0

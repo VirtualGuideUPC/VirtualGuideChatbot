@@ -75,7 +75,7 @@ def make_keywords(text):
     """
     doc = nlp(text)
     # print("Recibí: ", text)
-    sub_toks = [normalize_tilde(str(tok)) for tok in doc if (tok.dep_ == "nsubj") or (tok.dep_ == "ROOT") or (tok.dep_ == "flat") or (tok.dep_ == "dobj") or (tok.dep_ == "amod") or (tok.dep_ == "appos")]
+    sub_toks = [normalize_tilde(str(tok)) for tok in doc if (tok.dep_ == "nsubj") or (tok.dep_ == "ROOT") or (tok.dep_ == "flat") or (tok.dep_ == "dobj") or (tok.dep_ == "amod") or (tok.dep_ == "appos") or (tok.dep_ == "dep") or (tok.dep_ == "obj")]
     return sub_toks
 
 #================= ESTO ES LO 'SIMULADO' ==============
@@ -97,44 +97,6 @@ def get_user_location():
     """
     g = geocoder.ip('me')
     return np.array(g.latlng)
-
-def fake_query(keywords, query_from: str, column_target: str, place_context: str):
-    """
-    keywords: Lista de keywords del lugar turístico que se quiere buscar
-    query_from: Indica de qué csv (tabla) se va a extraer la información
-    column_target: El nombre de la columna objetivo dentro de la tabla (lo que se va a retornar)
-    """
-
-    # 1. Preparar Variables
-    bs_dataframe = touristic_place # La tabla de la que se va a consultar
-    column_place_name = "name" # El nombre de la columna que guarda los nombres de los lugares
-    if query_from == "fun_facts":
-        bs_dataframe = fun_facts
-        column_place_name = "touristic_place_id"
-    
-    if place_context == " " or len(keywords) > 0:
-        # Si NO hay contexto
-        # 2. Buscar las instancias de la tabla que contengan las keywords:
-        touristic_places = bs_dataframe[column_place_name] # Arreglo de los nombres de los lugares dentro de la base de datos
-        touristic_places = set(touristic_places) # Conjunto para evitar problemas
-        touristic_places = [normalize_tilde(place) for place in touristic_places] # Convertir a Lista, Sin tildes para la búsqueda por keywords
-        list_i = [0 for _ in range(len(touristic_places))] # Contador para ver qué instancia (lugar) es el más adecuado según keywords
-        for i in range(len(touristic_places)):
-            for word in keywords:
-                if word.upper() in touristic_places[i]:
-                    list_i[i] = list_i[i] + 1
-        aux = np.max(list_i) # Máximo valor en el contador
-        if aux == 0:
-            return list([]), place_context # Si hay 0 resultados, regresa
-        i = list_i.index(aux) # El índice del lugar que más coincidencias tiene con mis keywords.
-        place_context = touristic_places[i].upper()
-        print("> Lugar: ", place_context)
-    
-    print("... Contexto:", place_context)
-    aux = bs_dataframe[bs_dataframe[column_place_name] == place_context]
-    aux = aux[column_target]
-    aux = [a for a in aux]
-    return aux, place_context
 
 # Consulta del lugar más cercano (Retorna String del Nombre del lugar)
 def query_near(user_location: np.array):
@@ -209,8 +171,4 @@ def new_query(select_column: list, from_data: str, where_pairs: list):
     # SELECT
     return aux[select_column]
 
-#print(select_names([], "BAR CORDANO"))
-#print(new_query(select_column=['longitude', 'latitude'], from_data = "touristic_place", where_pairs=[("name", "'MUSEO DE ARTE DE LIMA'")]))
-#print(touristic_place.query("cost_info == 'Libre' and type_place_id == 'FOLCLORE' "))
-#print(query_near(np.array([-12.06,-77.04])))
-#print(fake_query(["Perú", "Museo", "Banco", "Central", "Reserva"], "fun_facts", "fact", " "))
+#print(analyze("ñññ no preocupar palacio justicia"))
