@@ -1,6 +1,7 @@
 ## Librerías:
 # Procesamiento de Lenguaje Natural
-#from re import A
+# from re import A
+from nltk.util import pr
 import spacy # Lemmatizer (convertir palabras) con lenguaje español
 import numpy as np
 import pandas as pd
@@ -10,7 +11,7 @@ import pickle
 import geocoder
 
 # Preparación
-nltk.download('punkt')
+# nltk.download('punkt')
 nlp = spacy.load('es_core_news_sm') # Procesamiento de Lenguaje con base al español
 words = pickle.load(open('words.pkl','rb'))
 
@@ -74,11 +75,12 @@ def make_keywords(text):
     """
     doc = nlp(text)
     # print("Recibí: ", text)
-    sub_toks = [normalize_tilde(str(tok)) for tok in doc if (tok.dep_ == "nsubj") or (tok.dep_ == "ROOT") or (tok.dep_ == "flat") or (tok.dep_ == "dobj") or (tok.dep_ == "amod") or (tok.dep_ == "appos")]
+    sub_toks = [normalize_tilde(str(tok)) for tok in doc if (tok.dep_ == "nsubj") or (tok.dep_ == "ROOT") or (tok.dep_ == "flat") or (tok.dep_ == "dobj") or (tok.dep_ == "amod") or (tok.dep_ == "appos") or (tok.dep_ == "dep") or (tok.dep_ == "obj")]
     return sub_toks
 
 #================= ESTO ES LO 'SIMULADO' ==============
 
+# Tablas de la Base de Datos:
 fun_facts = pd.read_csv('data_prueba/fun_facts.csv', sep='|')
 touristic_place = pd.read_csv('data_prueba/touristic_place.csv', sep='|')
 touristic_place_category = pd.read_csv('data_prueba/touristic_place_category.csv', sep='|')
@@ -96,44 +98,7 @@ def get_user_location():
     g = geocoder.ip('me')
     return np.array(g.latlng)
 
-def fake_query(keywords, query_from: str, column_target: str, place_context: str):
-    """
-    keywords: Lista de keywords del lugar turístico que se quiere buscar
-    query_from: Indica de qué csv (tabla) se va a extraer la información
-    column_target: El nombre de la columna objetivo dentro de la tabla (lo que se va a retornar)
-    """
-
-    # 1. Preparar Variables
-    bs_dataframe = touristic_place # La tabla de la que se va a consultar
-    column_place_name = "name" # El nombre de la columna que guarda los nombres de los lugares
-    if query_from == "fun_facts":
-        bs_dataframe = fun_facts
-        column_place_name = "touristic_place_id"
-    
-    if place_context == " " or len(keywords) > 0:
-        # Si NO hay contexto
-        # 2. Buscar las instancias de la tabla que contengan las keywords:
-        touristic_places = bs_dataframe[column_place_name] # Arreglo de los nombres de los lugares dentro de la base de datos
-        touristic_places = set(touristic_places) # Conjunto para evitar problemas
-        touristic_places = [normalize_tilde(place) for place in touristic_places] # Convertir a Lista, Sin tildes para la búsqueda por keywords
-        list_i = [0 for _ in range(len(touristic_places))] # Contador para ver qué instancia (lugar) es el más adecuado según keywords
-        for i in range(len(touristic_places)):
-            for word in keywords:
-                if word.upper() in touristic_places[i]:
-                    list_i[i] = list_i[i] + 1
-        aux = np.max(list_i) # Máximo valor en el contador
-        if aux == 0:
-            return list([]), place_context # Si hay 0 resultados, regresa
-        i = list_i.index(aux) # El índice del lugar que más coincidencias tiene con mis keywords.
-        place_context = touristic_places[i].upper()
-        print("> Lugar: ", place_context)
-    
-    print("... Contexto:", place_context)
-    aux = bs_dataframe[bs_dataframe[column_place_name] == place_context]
-    aux = aux[column_target]
-    aux = [a for a in aux]
-    return aux, place_context
-
+# Consulta del lugar más cercano (Retorna String del Nombre del lugar)
 def query_near(user_location: np.array):
     """
     user_location: Coordenadas del usuario, en forma np.array([longitud, latitud])
@@ -146,7 +111,7 @@ def query_near(user_location: np.array):
         distancia.append(dist)
     touristic_place["Distancia"] = distancia # Añade columna de distancia euclidiana
     aux = touristic_place.sort_values(by=['Distancia'])
-    # Retorna el más cercano (índice 0)
+    #... Retorna el más cercano
     return aux.values[0][0] # Asumimos que == [0]['name'], retorna el string con el nombre de lugar
 
 # Selecciona solamente los nombres con mayor coincidencia (keywords / names)
@@ -205,3 +170,5 @@ def new_query(select_column: list, from_data: str, where_pairs: list):
     aux = bs_dataframe.query(where_str)
     # SELECT
     return aux[select_column]
+
+#print(analyze("ñññ no preocupar palacio justicia"))

@@ -42,6 +42,8 @@ class Prediction(Resource):
         #changed 'msg' to 'text' according to rest api model
         msg = request.json['text']
         cb = ChatBot(msg, place_context)
+        place_candidates = cb.set_message()
+        cb.select_candidate(place_candidates)
         cb.create_response()
         cb.select_response()
         message = cb.res
