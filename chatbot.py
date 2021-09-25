@@ -84,6 +84,9 @@ class ChatBot:
         self.responses = []
         self.intencion = self.ints[0]['intent']
         self.res = "no fuciona"
+        self.isPlaces = False
+        self.isPlacesSelected = False
+        self.place_candidates = []
         """
         ints: lista de objetos (diccionario). 
         Ejemplo: ints =
@@ -105,7 +108,14 @@ class ChatBot:
         self.responses = []
         tokens = make_keywords(aux) # Filtro (sintaxis)
         tokens = [str(token) for token in tokens] # e.g.: ['Museo', 'arte', 'lima']
+        """try:
+            val = int(self.message)
+            print(type(val))
+        except ValueError:
+            print(type(self.message))"""
+
         return select_names(keywords=tokens, place_context=self.place_context) # Lista de lugares candidatos
+
     def select_candidate(self, place_candidates):
         """
         De una lista de lugares 'candidatos', elige o pregunta al usuario
@@ -113,11 +123,22 @@ class ChatBot:
         if len(place_candidates) == 1:
             self.place_context = place_candidates[0]
         else:
-            print(">> Quiero asegurarme de entenderte bien, ¿a cuál de estos lugares te refieres?")
-            for i in range(len(place_candidates)):
-                print("%s: %s"%(i, place_candidates[i]))
-            message = "... Por favor, escribe el número: "
-            self.place_context = place_candidates[int(message)]
+            try:
+                num = int(self.message)
+                self.place_context = place_candidates[num]
+                self.isPlaces = False
+                self.isPlacesSelected = True
+            except ValueError:
+                res_question = "Quiero asegurarme de entenderte bien, ¿a cuál de estos lugares te refieres?"
+                self.place_candidates = place_candidates
+                for i in range(len(place_candidates)):
+                    res_question = res_question + "\n [{}]: {}".format(i, place_candidates[i])
+                    print("%s: %s" % (i, place_candidates[i]))
+                res_question = res_question + "\n ... Por favor, escribe el número:"
+                self.isPlaces = True
+                self.res = res_question
+                # message = input("... Por favor, escribe el número: ")
+
     def create_response(self):
         """
         Crea los valores en la lista self.responses
