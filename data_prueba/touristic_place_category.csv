@@ -1,11 +1,11 @@
 id|category_id|subcategory_id|touristic_place_id
 1|Arquitectura y espacios urbanos|Bares|BAR CORDANO
-2|Arquitectura y Espacios Urbanos|Palacio|PALACIO DE TORRE TAGLE
-3|Museos y otros|Museos|MUSEO DE ARTE DE LIMA
+2|Arquitectura y espacios urbanos|Palacio|PALACIO DE TORRE TAGLE
+3|Museos y otros|Museos|MUSEO DE ARTE DE LIMA - MALI
 4|Museos y otros|Museos|MUSEO HISTORICO MILITAR DE LOS COMBATIENTES DEL MORRO DE ARICA
 5|Arquitectura y espacios urbanos|Parques|PARQUE UNIVERSITARIO
 6|Museos y otros|Museos|MUSEO DE LA INQUISICIÓN Y DEL CONGRESO DE LA REPÚBLICA
-7|Arquitectura y Espacios Urbanos|Palacio|PALACIO DE JUSTICIA
+7|Arquitectura y espacios urbanos|Palacio|PALACIO DE JUSTICIA
 8|Museos y otros|Museos|MUSEO DEL BANCO CENTRAL DE RESERVA DEL PERÚ
 9|Museos y otros|Museos|MUSEO DEL PALACIO ARZOBISPAL DE LIMA
 10|Museos y otros|Museos|MATE MUSEO MARIO TESTINO
@@ -19,21 +19,21 @@ id|category_id|subcategory_id|touristic_place_id
 18|Museos y otros|Museos|MUSEO DE ARTE DE LA UNIVERSIDAD NACIONAL DE SAN MARCOS
 19|Museos y otros|Museos|CASA MUSEO RICARDO PALMA
 20|Museos y otros|Museos|CASA MUSEO JULIA CODESIDO
-21|Arquitectura y Espacios Urbanos|Parques|PARQUE FEDERICO VILLARREAL
-22|Arquitectura y Espacios Urbanos|Plazuelas|PLAZA SANTISIMA CRUZ DEL VIAJERO
+21|Arquitectura y espacios urbanos|Parques|PARQUE FEDERICO VILLARREAL
+22|Arquitectura y espacios urbanos|Plazuelas|PLAZA SANTISIMA CRUZ DEL VIAJERO
 23|Museos y otros|Museos|MUSEO LARCO HERRERA
-24|Arquitectura y Espacios Urbanos|Parques|PARQUE CENTRAL
-25|Arquitectura y Espacios Urbanos|Parques|PARQUE EL CARMEN
-26|Arquitectura y Espacios Urbanos|Plazas|PARQUE DEL FARO DE LA MARINA
-27|Arquitectura y Espacios Urbanos|Parques|PARQUE ALFREDO SALAZAR
-28|Arquitectura y Espacios Urbanos|Palacio|PALACIO MUNICIPAL DE MIRAFLORES
+24|Arquitectura y espacios urbanos|Parques|PARQUE CENTRAL
+25|Arquitectura y espacios urbanos|Parques|PARQUE EL CARMEN
+26|Arquitectura y espacios urbanos|Plazas|PARQUE DEL FARO DE LA MARINA
+27|Arquitectura y espacios urbanos|Parques|PARQUE ALFREDO SALAZAR
+28|Arquitectura y espacios urbanos|Palacio|PALACIO MUNICIPAL DE MIRAFLORES
 29|Museos y otros|Museos|MUSEO PEDRO DE OSMA
-30|Arquitectura y Espacios Urbanos|Palacio|PALACIO DE GOBIERNO
-31|Arquitectura y Espacios Urbanos|Palacio|PALACIO MUNICIPAL DE LIMA
-32|Arquitectura y Espacios Urbanos|Parques|PARQUE DE LA MURALLA
+30|Arquitectura y espacios urbanos|Palacio|PALACIO DE GOBIERNO
+31|Arquitectura y espacios urbanos|Palacio|PALACIO MUNICIPAL DE LIMA
+32|Arquitectura y espacios urbanos|Parques|PARQUE DE LA MURALLA
 33|Museos y otros|Museos|MUSEO ANDRÉS DEL CASTILLO
 34|Museos y otros|Museos|MUSEO DE ARTES Y TRADICIONES POPULARES
-35|Arquitectura y Espacios Urbanos|Parques|PARQUE DE LA RESERVA - CIRCUITO MÁGICO DEL AGUA
+35|Arquitectura y espacios urbanos|Parques|PARQUE DE LA RESERVA - CIRCUITO MÁGICO DEL AGUA
 36|Museos y otros|Museos|PINACOTECA MUNICIPAL IGNACIO MERINO
 37|Arquitectura y espacios urbanos|Iglesias|BASÍLICA CATEDRAL DE LIMA
 38|Arquitectura y espacios urbanos|Casa de valor arquitectónico|CASA ASPÍLLAGA – Centro Cultural Inca Garcilaso de la Vega
@@ -54,36 +54,36 @@ id|category_id|subcategory_id|touristic_place_id
 53|Arquitectura y espacios urbanos|Complejo Monumental|QUINTA HEEREN 
 54|Arquitectura y espacios urbanos|Santuario|SANTUARIO Y MONASTERIO DE LAS NAZARENAS
 55|Arquitectura y espacios urbanos|Parques|PARQUE DE LA MURALLA
-56|Arquitectura y Espacios Urbanos|Otros - Teatros|TEATRO MUNICIPAL DE LIMA
+56|Arquitectura y espacios urbanos|Otros - Teatros|TEATRO MUNICIPAL DE LIMA
 57|Museos y otros|Museos|MUSEO NUMISMÁTICO DEL PERÚ 
 58|Museos y otros|Museos| MUSEO ELECTORAL Y DE LA DEMOCRACIA
 59|Museos y otros|Museos| MUSEO DE ARTE ITALIANO
 60|Museos y otros|Museos|MUSEO ETNOGRAFICO DEL C.C JOSÉ PÍO AZA
 61|Museos y otros|Museos|CASA MUSEO DE LA LITERATURA
 62|Museos y otros|Museos|MUSEO DE ARQUEOLOGÍA Y ANTROPOLOGÍA UNMSM
-63|Arquitectura y Espacios Urbanos|Plazas|PLAZA SAN MARTÍN
+63|Arquitectura y espacios urbanos|Plazas|PLAZA SAN MARTÍN
 64|Museos y otros|Museos|MUSEO POSTAL Y FILATÉLICO DEL PERÚ
 65|Museos y otros|Museos|MUSEO JOSEFINA RAMOS DE COX
-66|Arquitectura y Espacios Urbanos|Parques|PARQUE DE LA EXPOSICIÓN DE LIMA
+66|Arquitectura y espacios urbanos|Parques|PARQUE DE LA EXPOSICIÓN DE LIMA
 67|Museos y otros|Museos|MUSEO GRÁFICO DEL DIARIO EL PERUANO
-68|Lugares Históricos|Barrios históricos|BARRIO CHINO
+68|Lugares históricos|Barrios históricos|BARRIO CHINO
 69|Museo y otros|Museos|MUSEO NUMISMÁTICO DEL BANCO DE CRÉDITO DEL PERÚ
-70|Arquitectura y Espacios Urbanos|Plazas|PLAZA DOS DE MAYO
+70|Arquitectura y espacios urbanos|Plazas|PLAZA DOS DE MAYO
 71|Museos y otros|Museos|MUSEO DE ANTROPOLOGÍA Y ARQUEOLOGÍA DE LA UNIVERSIDAD NACIONAL FEDERICO VILLARREAL
-72|Arquitectura y Espacios Urbanos|Plazuelas|PLAZA PERÚ
+72|Arquitectura y espacios urbanos|Plazuelas|PLAZA PERÚ
 73|Museos y otros|Museos|MUSEO LEGIÓN DE CABALLERÍA DEL PERÚ
-74|Ferias y Mercados|Mercados  Artesanales|MERCADOS ARTESANALES LA MARINA
+74|Ferias y mercados|Mercados  Artesanales|MERCADOS ARTESANALES LA MARINA
 75|Centros Científicos y Técnicos|Zoológicos|PARQUE DE LAS LEYENDAS
 76|Zonas paisajísticas|Bosques|BOSQUE EL OLIVAR DE SAN ISIDRO
 77|Museos y otros|Museos|MUSEO DE ARTE CONTEMPORÁNEO DE LIMA MAC-LIMA
-78|Arquitectura y Espacios Urbanos|Malecones|MALECÓN GRAU
-79|Arquitectura y Espacios Urbanos|Miradores|MIRADOR CATALINA RECAVARREN
+78|Arquitectura y espacios urbanos|Malecones|MALECÓN GRAU
+79|Arquitectura y espacios urbanos|Miradores|MIRADOR CATALINA RECAVARREN
 80|Museos y otros|Museos|MUSEO DE SITIO ANDRES AVELINO CACERES
-81|Arquitectura y Espacios Urbanos|Parques|CAMPO DE MARTE
-82|Arquitectura y Espacios Urbanos|Parques|PARQUE ITZHAK RABIN
-83|Arquitectura y Espacios Urbanos|Parques|PARQUE ALBERTO ANDRADE CARMONA (PARQUE DEL AMOR)
-84|Arquitectura y Espacios Urbanos|Parques|PARQUE RAIMONDI
-85|Arquitectura y Espacios Urbanos|Parques|PARQUE MARÍA REICHE
-86|Arquitectura y Espacios Urbanos|Parques|PARQUE TRADICIONES
+81|Arquitectura y espacios urbanos|Parques|CAMPO DE MARTE
+82|Arquitectura y espacios urbanos|Parques|PARQUE ITZHAK RABIN
+83|Arquitectura y espacios urbanos|Parques|PARQUE ALBERTO ANDRADE CARMONA (PARQUE DEL AMOR)
+84|Arquitectura y espacios urbanos|Parques|PARQUE RAIMONDI
+85|Arquitectura y espacios urbanos|Parques|PARQUE MARÍA REICHE
+86|Arquitectura y espacios urbanos|Parques|PARQUE TRADICIONES
 87|Museos y otros|Museos|LUGAR DE LA MEMORIA, LA TOLERANCIA Y LA INCLUSIÓN SOCIAL - LUM
-88|Arquitectura y Espacios Urbanos|Parques|PARQUE DOMODOSSOLA
+88|Arquitectura y espacios urbanos|Parques|PARQUE DOMODOSSOLA
