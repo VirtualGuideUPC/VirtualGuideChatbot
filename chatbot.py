@@ -78,6 +78,18 @@ def get_response(intents_list, intents_json):
 
 class ChatBot:
     def __init__(self, msg: str, place_context: str):
+        """
+        * message: Mensaje de entrada (str) que será analizado por la red neuronal
+        * ints: lista de objetos de la preddición 
+            (e.g.; ints = [{'intents': nombre del tag, 'probabilty': resultado de la neurona},
+                            {...}])
+        * place_context: último lugar del que se hablado (por nombre: str)
+        * responses: lista de strings de respuestas
+        * intencion: str de la intencion puntual más probable según la red neuronal
+        * res: str, respuesta elegida de una la lista responses
+        * isPlaces / isPlacesSelected: Para los casos de incertidumbre (ver select_candidate)
+        * img_attachments: Lista de urls de una imagen asociada a cierto lugar
+        """
         self.message = msg.lower()
         self.ints = predict_class(self.message)
         self.place_context = place_context
@@ -87,12 +99,7 @@ class ChatBot:
         self.isPlaces = False
         self.isPlacesSelected = False
         self.place_candidates = []
-        """
-        ints: lista de objetos (diccionario). 
-        Ejemplo: ints =
-        [{'intents': nombre del tag, 'probabilty': resultado de la neurona},
-        {...}]
-        """
+        self.img_attachments = []
     
     def set_message(self):
         """
@@ -138,6 +145,9 @@ class ChatBot:
                 self.isPlaces = True
                 self.res = res_question
                 # message = input("... Por favor, escribe el número: ")
+        aux_context = "'%s'"%self.place_context
+        res_images = new_query(select_column=['url'], from_data = "url_images", where_pairs=[("touristic_place_id", aux_context)])
+        self.img_attachments = [url for url in res_images['url']]
 
     def create_response(self):
         """
@@ -167,6 +177,7 @@ class ChatBot:
             res = query_near(get_user_location())
             self.place_context = res
             self.responses = ["Encontré: %s"%res]
+    
     def select_response(self):
         if len(self.responses) > 0:
             # Si se hizo una consulta que sí devuelve info:
