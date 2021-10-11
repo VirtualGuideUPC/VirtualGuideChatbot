@@ -177,6 +177,8 @@ class ChatBot:
             res = query_near(get_user_location())
             self.place_context = res
             self.responses = ["Encontré: %s"%res]
+            res_images = new_query(select_column=['url'], from_data = "url_images", where_pairs=[("touristic_place_id", aux_context)])
+            self.img_attachments = [url for url in res_images['url']]
     
     def select_response(self):
         if len(self.responses) > 0:
