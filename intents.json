@@ -42,11 +42,14 @@
   {"tag": "consulta_recomendacion", 
    "patterns": ["Hola, ¿qué me recomiendas?", "¿Dónde podría ir?", "Recomiéndame un sitio turístico", "Dame una recomendación", 
                 "Quiero conocer un nuevo sitio", "Dime, qué me recomiendas hacer?"],
-   "responses": ["Consulta con Roberto", "No importa, todo sucede porque así lo quiso la sagrada línea del tiempo"]},
+   "responses": ["Consulta con Roberto", "Lo estamos implementando"]},
   {"tag": "consulta_lugares_cerca", 
    "patterns": ["¿Qué lugares hay cerca mío?", "¿Qué lugares hay cerca de mí", "Muestrame los lugares cercanos", "Dime qué lugares hay cerca", "¿Qué sitios tengo cerca?", 
     "Dime sitios turísticos cercanos", "¿Qué lugares turísticos hay cerca?", "¿A dónde puedo ir?", "Cuál es el lugar más cercano"], 
-   "responses": ["Lo siento, no pude ver qué sitios tienes cerca.", "Perdón, no pude identificar tu ubicación"]}, 
+   "responses": ["Lo siento, no pude ver qué sitios tienes cerca.", "Perdón, no pude identificar tu ubicación"]},
+  {"tag": "consulta_categoria", 
+   "patterns": ["¿Qué clase de lugar es?", "¿Qué tipo de lugar es?", "¿En qué categoría está?", "¿Este lugar es parte de qué categoría?"], 
+   "responses": ["Lo siento... no sé"]}, 
   {"tag": "nulo", "patterns": [" "], 
    "responses": ["Lo siento, no sé qué me has querido decir", "Por favor, repite tu consulta", "... Lo siento, no entendí"]}
  ]

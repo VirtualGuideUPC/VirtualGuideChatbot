@@ -173,6 +173,10 @@ class ChatBot:
         elif self.intencion == "contexto":
             if self.place_context != " ":
                 self.responses = [self.place_context]
+        elif self.intencion == "consulta_categoria":
+            res = new_query(['category_id', 'subcategory_id'], "touristic_place_category", [("touristic_place_id", aux_context)])
+            if len(res) > 0:
+                self.responses = ["%s pertenece a '%s', parte de la categoría '%s'"%(aux_context, res.values[0][1], res.values[0][0])]
         elif self.intencion == "consulta_lugares_cerca":
             res = query_near(get_user_location())
             self.place_context = res

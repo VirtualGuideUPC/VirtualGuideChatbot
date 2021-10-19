@@ -7,7 +7,7 @@ import spacy # Lemmatizer (convertir palabras) con lenguaje español
 import pickle # Guardar archivos
 import numpy as np
 import nltk # Natural Language ToolKit: Tokenizar
-from recursos import lemmatizer
+from recursos import lemmatizer, normalize_tilde
 
 # Redes Neuronales:
 import random
@@ -29,7 +29,8 @@ def load_training_data(json_file = "intents.json"):
         # Por cada intención:
         for pattern in intent['patterns']:
             # Tokenizar el patrón de palabras que usaría el usuario y agregar las palabras a 'words'.
-            pattern = lemmatizer(pattern) # Para separar '¿:::'
+            pattern = lemmatizer(pattern) #........ Para separar '¿__w1__w2' y pasar palabras a su forma base.
+            pattern = normalize_tilde(pattern) #... Quitas las tildes.
             word_list = nltk.word_tokenize(pattern)
             words.extend(word_list)
             # Agregar a 'documents' la tupla (lista de palabras, etiqueta de la intención)
