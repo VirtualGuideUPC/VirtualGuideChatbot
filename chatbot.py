@@ -79,16 +79,19 @@ def get_response(intents_list, intents_json):
 class ChatBot:
     def __init__(self, msg: str, place_context: str):
         """
-        * message: Mensaje de entrada (str) que será analizado por la red neuronal
+        * msg: Mensaje de entrada (str) que será analizado por la red neuronal, guardado en variable 'message'
+        * place_context: último lugar del que se hablado (por nombre: str)
+        
+        Variables internas:
         * ints: lista de objetos de la preddición 
             (e.g.; ints = [{'intents': nombre del tag, 'probabilty': resultado de la neurona},
                             {...}])
-        * place_context: último lugar del que se hablado (por nombre: str)
         * responses: lista de strings de respuestas
         * intencion: str de la intencion puntual más probable según la red neuronal
         * res: str, respuesta elegida de una la lista responses
         * isPlaces / isPlacesSelected: Para los casos de incertidumbre (ver select_candidate)
         * img_attachments: Lista de urls de una imagen asociada a cierto lugar
+        * show_image: Flag que indica si debería mostrarse una imagen junto a la respuesta
         """
         self.message = msg.lower()
         self.ints = predict_class(self.message)
@@ -100,6 +103,7 @@ class ChatBot:
         self.isPlacesSelected = False
         self.place_candidates = []
         self.img_attachments = []
+        self.show_image = False
     
     def set_message(self):
         """
@@ -152,12 +156,14 @@ class ChatBot:
     def create_response(self):
         """
         Crea los valores en la lista self.responses
-        (Solamente para las consultas relacionadas a la base de datos)
+        (Consultas relacionadas a la base de datos y S.R.)
         """
         aux_context = "'%s'"%self.place_context
+        self.show_image = False
         if self.intencion == "consulta_trivia":
             res = new_query(select_column=['fact'], from_data = "fun_facts", where_pairs=[("touristic_place_id", aux_context)])
             self.responses = [trivia for trivia in res['fact']].copy()
+            self.show_image = True
         elif self.intencion == "consulta_lugar":
             res = new_query(select_column=['longitude', 'latitude'], from_data = "touristic_place", where_pairs=[("name", aux_context)])
             if len(res) > 0:
@@ -173,6 +179,7 @@ class ChatBot:
         elif self.intencion == "contexto":
             if self.place_context != " ":
                 self.responses = [self.place_context]
+                self.show_image = True
         elif self.intencion == "consulta_categoria":
             res = new_query(['category_id', 'subcategory_id'], "touristic_place_category", [("touristic_place_id", aux_context)])
             if len(res) > 0:
@@ -183,10 +190,23 @@ class ChatBot:
             self.responses = ["Encontré: %s"%res]
             res_images = new_query(select_column=['url'], from_data = "url_images", where_pairs=[("touristic_place_id", aux_context)])
             self.img_attachments = [url for url in res_images['url']]
+            self.show_image = True
     
     def select_response(self):
+        """
+        Actualiza el atributo 'res' para guardar la respuesta (str)
+        En caso no existan consultas, utiliza las respuestas por defecto declaradas en el archivo intents.json
+        """
         if len(self.responses) > 0:
             # Si se hizo una consulta que sí devuelve info:
             self.res = random.choice(self.responses)  # Elegir respuesta al azar
         else:
             self.res = get_response(self.ints, intents)
+            self.show_image = False
+    
+    def get_url_image(self):
+        """
+        Retorna un enlace (str) al azar de la lista interna (img_attachments)
+        """
+        if len(self.img_attachments) > 0:
+            return random.choice(self.img_attachments)

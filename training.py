@@ -55,13 +55,6 @@ print("intents.json cargado")
 print("Palabras detectadas:", len(words))
 print("Intenciones detectadas:", len(tags))
 
-if "hola" in words:
-    aux = words.index("hola")
-    print(words[aux])
-if "bye" in words:
-    aux = words.index("bye")
-    print(words[aux])
-
 # ... Guardarlos
 pickle.dump(words, open('words.pkl', 'wb'))
 pickle.dump(tags, open('tags.pkl', 'wb'))
