@@ -10,7 +10,7 @@ def show_image(image_url):
         if cv.waitKey(1) & 0xFF == ord('q'):
             break #...............SALE DEL BUCLE
 
-AVT = ChatBot(" ", " ")
+AVT = ChatBot("Hola", " ")
 
 print(AVT)
 print("Start!")
@@ -23,10 +23,12 @@ while True:
     AVT.select_candidate(place_candidates)
     AVT.create_response()
     AVT.select_response()
-    print(AVT.res)
+    print(">>", AVT.res)
+    if AVT.show_image:
+        print("* URL de la imagen:", AVT.get_url_image())
     if AVT.intencion == "despedida":
         break
 
 if len(AVT.img_attachments):
-    url_img = AVT.img_attachments[0]
+    url_img = AVT.get_url_image()
     show_image(url_img)
