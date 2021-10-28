@@ -104,12 +104,14 @@ class ChatBot:
         self.place_candidates = []
         self.img_attachments = []
         self.show_image = False
-    
+
     def set_message(self):
         """
         Analiza el mensaje de entrada hasta extraer una lista de palabras clave.
-        >> msg: Mensaje (string) de entrada
-        Retorna: Lista de keywords
+        * place_candidates: Lista de lugares (str) posibles a partir de las keywords
+        Retorna el valor booleano (len(place_candidates) > 1), que indica:
+        > True: Necesita select_from_candidates
+        > False: No hay ambiguedad, o 0 keywords, o 1 solo lugar posible. (confirm_candidate)
         """
         #self.message = msg.lower() #...... Mensaje de entrada en minúsculas
         self.ints = predict_class(self.message) #.. Intención (objeto)
@@ -119,14 +121,35 @@ class ChatBot:
         self.responses = []
         tokens = make_keywords(aux) # Filtro (sintaxis)
         tokens = [str(token) for token in tokens] # e.g.: ['Museo', 'arte', 'lima']
-        """try:
-            val = int(self.message)
-            print(type(val))
-        except ValueError:
-            print(type(self.message))"""
+        self.place_candidates = select_names(keywords=tokens, place_context=self.place_context) # Lista de lugares candidatos
+        return len(self.place_candidates) > 1
 
-        return select_names(keywords=tokens, place_context=self.place_context) # Lista de lugares candidatos
+    def selec_from_candidates(self, chosen_index: int):
+        """
+        De la lista de lugares 'candidatos', elige como contexto
+        al i-ésimo lugar, con i dado por el chosen_index
+        """
+        if chosen_index > 0 and chosen_index < len(chosen_index):
+            # Solo cambiar contexto si sí ha elegido uno dentro del 
+            self.place_context = self.place_candidates[chosen_index]
+        
+    def confirm_candidate(self):
+        if len(self.place_candidates):
+            # Solo cambiar contexto si hay candidato
+            self.place_context = self.place_candidates[0]
 
+    def save_context(self):
+        """
+        Guarda el contexto en un archivo pkl, asegurando su lectura.
+        Confirma el contexto, actualizando las imágenes asociadas.
+        """
+        pickle.dump(self.place_context, open('place_context.pkl', 'wb'))
+        aux_context = "'%s'"%self.place_context
+        res_images = new_query(select_column=['url'], from_data = "url_images", where_pairs=[("touristic_place_id", aux_context)])
+        self.img_attachments = [url for url in res_images['url']]
+        return True
+
+    # Función original para manejar 'candidates':
     def select_candidate(self, place_candidates):
         """
         De una lista de lugares 'candidatos', elige o pregunta al usuario
@@ -158,7 +181,8 @@ class ChatBot:
         Crea los valores en la lista self.responses
         (Consultas relacionadas a la base de datos y S.R.)
         """
-        aux_context = "'%s'"%self.place_context
+        place_context = pickle.load(open('place_context.pkl','rb')) # Carga el contexto
+        aux_context = "'%s'"%place_context
         self.show_image = False
         if self.intencion == "consulta_trivia":
             res = new_query(select_column=['fact'], from_data = "fun_facts", where_pairs=[("touristic_place_id", aux_context)])
