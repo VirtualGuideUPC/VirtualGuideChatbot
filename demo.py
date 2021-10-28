@@ -1,4 +1,5 @@
 import cv2 as cv
+from numpy.lib.function_base import place
 from skimage import io
 
 from chatbot import ChatBot
@@ -18,9 +19,17 @@ print("Start!")
 while True:
     msg = input("...").lower()
     AVT.message = msg
-    place_candidates = AVT.set_message()
-    #print("Debug: >> candidates: ", place_candidates)
-    AVT.select_candidate(place_candidates)
+    many_candidates = AVT.set_message()
+    # AVT.select_candidate(place_candidates)
+    if many_candidates:
+        print("Quiero asegurarme...?")
+        for i in range(len(AVT.place_candidates)):
+            print("%s: %s"%(i,AVT.place_candidates[i]))
+        index = int(input(">> Ingresa el número"))
+        AVT.selec_from_candidates(index)
+    else:
+        AVT.confirm_candidate()
+    AVT.save_context()
     AVT.create_response()
     AVT.select_response()
     print(">>", AVT.res)
