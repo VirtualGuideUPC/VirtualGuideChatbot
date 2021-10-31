@@ -129,7 +129,7 @@ class ChatBot:
         De la lista de lugares 'candidatos', elige como contexto
         al i-ésimo lugar, con i dado por el chosen_index
         """
-        if chosen_index > 0 and chosen_index < len(chosen_index):
+        if chosen_index > 0 and chosen_index < len(self.place_candidates):
             # Solo cambiar contexto si sí ha elegido uno dentro del 
             self.place_context = self.place_candidates[chosen_index]
         
