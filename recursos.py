@@ -85,6 +85,7 @@ fun_facts = pd.read_csv('data_prueba/fun_facts.csv', sep='|')
 touristic_place = pd.read_csv('data_prueba/touristic_place.csv', sep='|')
 touristic_place_category = pd.read_csv('data_prueba/touristic_place_category.csv', sep='|')
 url_images = pd.read_csv('data_prueba/url_images.csv', sep='|')
+user_context = pd.read_csv('data_prueba/user_context.csv', sep='|')
 
 # Nombres de todos los lugares existentes en la base de datos (Lista)
 names = list(touristic_place_category['touristic_place_id'])
@@ -155,14 +156,14 @@ def new_query(select_column: list, from_data: str, where_pairs: list):
     """
     # FROM
     bs_dataframe = touristic_place # La tabla de la que se va a consultar
-    column_place_name = "name" # El nombre de la columna que guarda los nombres de los lugares
     if from_data == "fun_facts":
         bs_dataframe = fun_facts
-        #column_place_name = "touristic_place_id"
     elif from_data == "touristic_place_category":
         bs_dataframe = touristic_place_category
     elif from_data == "url_images":
         bs_dataframe = url_images
+    elif from_data == "user_context":
+        bs_dataframe = user_context
     # WHERE
     where_str = ""
     for i in range(len(where_pairs)):
@@ -173,5 +174,29 @@ def new_query(select_column: list, from_data: str, where_pairs: list):
     aux = bs_dataframe.query(where_str)
     # SELECT
     return aux[select_column]
+
+# TO DO: Terminar toda la función
+def add_row(row: list, from_data: str, replace: bool = True, key_column: str = "id") -> None:
+    """
+    * row(s): Fila a agregar al dataset. Formato: [{v1: valor, v2: valor, ...}]
+    * from_data: Nombre de la tabla sobre la cual se va a ejecutar este formato
+    * replace: Indica si debería actualizar (reemplazar) la fila (1) en lugar de añadir
+    * key_column: SOLO en caso de REPLACE. Nombre de la columna 'llave' con la que se define la fila a reemplazar
+    """
+    # FROM
+    bs_dataframe = touristic_place # La tabla de la que se va a consultar
+    if from_data == "fun_facts":
+        bs_dataframe = fun_facts
+    elif from_data == "touristic_place_category":
+        bs_dataframe = touristic_place_category
+    elif from_data == "url_images":
+        bs_dataframe = url_images
+    elif from_data == "user_context":
+        bs_dataframe = user_context
+    
+    if replace:
+        return
+    bs_dataframe.append(row, ignore_index=True)
+    return
 
 #print(analyze("ñññ no preocupar palacio justicia"))
