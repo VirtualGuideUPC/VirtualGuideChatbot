@@ -138,12 +138,15 @@ class ChatBot:
             # Solo cambiar contexto si hay candidato
             self.place_context = self.place_candidates[0]
 
-    def save_context(self):
+    def save_context(self, user_id):
         """
+        user_id: ID del usuario
         Guarda el contexto en un archivo pkl, asegurando su lectura.
         Confirma el contexto, actualizando las imágenes asociadas.
         """
+        # LUEGO SE VA A BORRAR ESTA LÍNEA
         pickle.dump(self.place_context, open('place_context.pkl', 'wb'))
+        # ... Necesario para actualizar la imagen:
         aux_context = "'%s'"%self.place_context
         res_images = new_query(select_column=['url'], from_data = "url_images", where_pairs=[("touristic_place_id", aux_context)])
         self.img_attachments = [url for url in res_images['url']]
