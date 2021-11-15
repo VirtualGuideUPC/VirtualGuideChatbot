@@ -2,14 +2,16 @@
 # Para 'intents.json'
 import json # Para el formato json
 import codecs # Lectura de caracteres en español
-import pickle
+import pickle # Guardar y leer archivos
+import datetime # Saber tiempo
 # from google.protobuf import message
 import nltk
 import random
 import numpy as np
+
 from numpy.lib.function_base import place
 
-from recursos import get_user_location, lemmatizer, filter, make_keywords, new_query, query_near, select_names
+from recursos import add_row, get_user_location, lemmatizer, filter, make_keywords, new_query, query_near, select_names
 
 from tensorflow.keras.models import load_model
 
@@ -144,8 +146,9 @@ class ChatBot:
         Guarda el contexto en un archivo pkl, asegurando su lectura.
         Confirma el contexto, actualizando las imágenes asociadas.
         """
-        # LUEGO SE VA A BORRAR ESTA LÍNEA
-        pickle.dump(self.place_context, open('place_context.pkl', 'wb'))
+        row = [{'user_id': user_id, 'place_context': self.place_context, 'time': datetime.datetime.now()}]
+        # pickle.dump(self.place_context, open('place_context.pkl', 'wb'))
+        add_row(row,'user_context', replace = True, key_column='user_id')
         # ... Necesario para actualizar la imagen:
         aux_context = "'%s'"%self.place_context
         res_images = new_query(select_column=['url'], from_data = "url_images", where_pairs=[("touristic_place_id", aux_context)])

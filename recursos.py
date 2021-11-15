@@ -89,7 +89,7 @@ user_context = pd.read_csv('data_prueba/user_context.csv', sep='|')
 
 # Nombres de todos los lugares existentes en la base de datos (Lista)
 names = list(touristic_place_category['touristic_place_id'])
-aux_names = [normalize_tilde(place) for place in names] # Convertir a Lista, Sin tildes para la búsqueda por keywords
+AUX_NAMES = [normalize_tilde(place) for place in names] # Convertir a Lista, Sin tildes para la búsqueda por keywords
 
 # OJO: Usa el par (latitud, longitud) de quien esté ejecutando esto.
 def get_user_location():
@@ -126,13 +126,13 @@ def select_names(keywords: list, place_context: str):
     # Si NO hay contexto o SÍ se han ingresado keywords
     if place_context == " " or len(keywords) > 0:
         # Buscar los nombres de los lugares que contengan las keywords:
-        list_i = [(i, 0) for i in range(len(aux_names))] # Contador para ver qué instancia (lugar) es el más adecuado 
+        list_i = [(i, 0) for i in range(len(AUX_NAMES))] # Contador para ver qué instancia (lugar) es el más adecuado 
         #... según keywords. e.g: [(0, # de coincidencias), (1, #), (2,#)]
         # print("KEYWORDS:", keywords)
-        for i in range(len(aux_names)):
+        for i in range(len(AUX_NAMES)):
             for word in keywords:
-                if word.upper() in aux_names[i]:
-                    # print("Se encontró %s en %s"%(word.upper(),aux_names[i]))
+                if word.upper() in AUX_NAMES[i]:
+                    # print("Se encontró %s en %s"%(word.upper(),AUX_NAMES[i]))
                     list_i[i] = (i, list_i[i][1] + 1) # (indice, numero de coincidencias)
         list_i.sort(key=lambda x: x[1], reverse=True) # Ordenar los nombres por mayor
                             #... coincidencias con las keywords
@@ -149,21 +149,18 @@ def select_names(keywords: list, place_context: str):
 
 def new_query(select_column: list, from_data: str, where_pairs: list):
     """
-    * select_column: Análogo a 'SELECT' de SQL. Ingresa los nombres de las columnas (e.g: [str, str])
-    * from_data: Análogo a 'FROM' de SQL. Ingresa el nombre de la tabla de la que se va a extraer la información
+    * select_column: Ingresa los nombres de las columnas a seleccionar. Formato: [str, str, ...]
+    * from_data: Ingresa el nombre de la tabla de la que se va a extraer.
+        - touristic_place............ Información detallada de lugares turísticos
+        - touristic_place_category... Información de la categoría de los lugares
+        - url_images................. Enlaces de imágenes por cada lugar
+        - user_context............... Historial de consultas en el chatbot 
     * where_pairs: Lista de tuplas (columna, valor). Las condiciones que se desean cumplir 
                 e.g: ((c_1 == v_1) and (c_2 == v_2) ...), en where_pairs = [(c_1,v_1), (c_2, v_2), ...]
     """
     # FROM
-    bs_dataframe = touristic_place # La tabla de la que se va a consultar
-    if from_data == "fun_facts":
-        bs_dataframe = fun_facts
-    elif from_data == "touristic_place_category":
-        bs_dataframe = touristic_place_category
-    elif from_data == "url_images":
-        bs_dataframe = url_images
-    elif from_data == "user_context":
-        bs_dataframe = user_context
+    aux_ruta = 'data_prueba/%s.csv'%from_data
+    df = pd.read_csv(aux_ruta, sep='|')
     # WHERE
     where_str = ""
     for i in range(len(where_pairs)):
@@ -171,7 +168,7 @@ def new_query(select_column: list, from_data: str, where_pairs: list):
         where_str = where_str + "%s == %s"%(pair[0], pair[1])
         if i < len(where_pairs) - 1:
             where_str = where_str + " and "
-    aux = bs_dataframe.query(where_str)
+    aux = df.query(where_str)
     # SELECT
     return aux[select_column]
 
@@ -184,19 +181,21 @@ def add_row(row: list, from_data: str, replace: bool = True, key_column: str = "
     * key_column: SOLO en caso de REPLACE. Nombre de la columna 'llave' con la que se define la fila a reemplazar
     """
     # FROM
-    bs_dataframe = touristic_place # La tabla de la que se va a consultar
-    if from_data == "fun_facts":
-        bs_dataframe = fun_facts
-    elif from_data == "touristic_place_category":
-        bs_dataframe = touristic_place_category
-    elif from_data == "url_images":
-        bs_dataframe = url_images
-    elif from_data == "user_context":
-        bs_dataframe = user_context
-    
+    aux_ruta = 'data_prueba/%s.csv'%from_data
+    df = pd.read_csv(aux_ruta, sep='|')
     if replace:
+        # 1: Identificar qué key
+        pares = [(key_column,r[key_column]) for r in row] # where_pairs: [(key, value),(),...]
+        aux = new_query(key_column, from_data, pares) # Buscar qué pares existen en la data
+        indices = [int(i) for i in aux.index] # Serie de índices ya usados
+        df = df.drop(indices, axis=0) # Borra los indices
+        df = df.append(row, ignore_index=True)    
+        df.to_csv(aux_ruta, index=False, sep = '|')
         return
-    bs_dataframe.append(row, ignore_index=True)
-    return
+    df = df.append(row, ignore_index=True)
+    df.to_csv(aux_ruta, index=False, sep = '|')
 
-#print(analyze("ñññ no preocupar palacio justicia"))
+# add_row([{'user_id': 1, 'place_context': 'Alo', 'time': 5}], 'user_context', replace=True, key_column='user_id')
+# aux = new_query(select_column="url", from_data="url_images", where_pairs=[('touristic_place_id', "'AEA'")])
+# print(aux)
+# print(aux.index)
