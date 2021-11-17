@@ -29,7 +29,7 @@ while True:
         AVT.selec_from_candidates(index)
     else:
         AVT.confirm_candidate()
-    AVT.save_context()
+    AVT.save_context(1)
     AVT.create_response()
     AVT.select_response()
     print(">>", AVT.res)
