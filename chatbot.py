@@ -182,14 +182,19 @@ class ChatBot:
         res_images = new_query(select_column=['url'], from_data = "url_images", where_pairs=[("touristic_place_id", aux_context)])
         self.img_attachments = [url for url in res_images['url']]
 
-    def create_response(self):
+    def create_response(self, user_id):
         """
+        * user_id: ID del usuario que hace la consulta
         Crea los valores en la lista self.responses
         (Consultas relacionadas a la base de datos y S.R.)
         """
-        place_context = pickle.load(open('place_context.pkl','rb')) # Carga el contexto
+        # Cargar el contexto de la persona:
+        place_context = new_query(select_column=['place_context'], from_data = "user_context", where_pairs=[("user_id", user_id)])
+        place_context = [p for p in place_context['place_context']].copy()
+        place_context = place_context[0]
         aux_context = "'%s'"%place_context
         self.show_image = False
+        # Consultar según la intención
         if self.intencion == "consulta_trivia":
             res = new_query(select_column=['fact'], from_data = "fun_facts", where_pairs=[("touristic_place_id", aux_context)])
             self.responses = [trivia for trivia in res['fact']].copy()
