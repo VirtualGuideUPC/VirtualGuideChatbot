@@ -81,11 +81,8 @@ def make_keywords(text):
 #================= ESTO ES LO 'SIMULADO' ==============
 
 # Tablas de la Base de Datos:
-fun_facts = pd.read_csv('data_prueba/fun_facts.csv', sep='|')
 touristic_place = pd.read_csv('data_prueba/touristic_place.csv', sep='|')
 touristic_place_category = pd.read_csv('data_prueba/touristic_place_category.csv', sep='|')
-url_images = pd.read_csv('data_prueba/url_images.csv', sep='|')
-user_context = pd.read_csv('data_prueba/user_context.csv', sep='|')
 
 # Nombres de todos los lugares existentes en la base de datos (Lista)
 names = list(touristic_place_category['touristic_place_id'])

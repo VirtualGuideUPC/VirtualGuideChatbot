@@ -12,6 +12,7 @@ def show_image(image_url):
             break #...............SALE DEL BUCLE
 
 AVT = ChatBot("Hola", " ")
+USER_ID = 2
 
 print(AVT)
 print("Start!")
@@ -20,6 +21,7 @@ while True:
     msg = input("...").lower()
     AVT.message = msg
     many_candidates = AVT.set_message()
+    print("---", AVT.intencion)
     # AVT.select_candidate(place_candidates)
     if many_candidates:
         print("Quiero asegurarme...?")
@@ -29,8 +31,8 @@ while True:
         AVT.selec_from_candidates(index)
     else:
         AVT.confirm_candidate()
-    AVT.save_context(1)
-    AVT.create_response()
+    AVT.save_context(USER_ID)
+    AVT.create_response(USER_ID)
     AVT.select_response()
     print(">>", AVT.res)
     if AVT.show_image:
