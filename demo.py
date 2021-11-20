@@ -11,8 +11,8 @@ def show_image(image_url):
         if cv.waitKey(1) & 0xFF == ord('q'):
             break #...............SALE DEL BUCLE
 
-AVT = ChatBot("Hola", " ")
 USER_ID = 2
+AVT = ChatBot("Hola", USER_ID)
 
 print(AVT)
 print("Start!")
