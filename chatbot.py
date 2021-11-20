@@ -79,10 +79,10 @@ def get_response(intents_list, intents_json):
 
 
 class ChatBot:
-    def __init__(self, msg: str, place_context: str):
+    def __init__(self, msg: str, id_usuario: int):
         """
         * msg: Mensaje de entrada (str) que será analizado por la red neuronal, guardado en variable 'message'
-        * place_context: último lugar del que se hablado (por nombre: str)
+        * id_usuario: ID del usuario que inicia la conversación (se usa para definir place_context)
         
         Variables internas:
         * ints: lista de objetos de la preddición 
@@ -97,7 +97,14 @@ class ChatBot:
         """
         self.message = msg.lower()
         self.ints = predict_class(self.message)
-        self.place_context = place_context
+        
+        context = new_query(select_column=['place_context'], from_data = "user_context", where_pairs=[("user_id", id_usuario)])
+        self.place_context = [c for c in context['place_context']]
+        if len(self.place_context):
+            self.place_context = self.place_context[0]
+        else:
+            self.place_context = " "
+        
         self.responses = []
         self.intencion = self.ints[0]['intent']
         self.res = "no fuciona"
