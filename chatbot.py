@@ -222,6 +222,11 @@ class ChatBot:
             if self.place_context != " ":
                 self.responses = [self.place_context]
                 self.show_image = True
+        elif self.intencion == "consulta_recomendacion":
+            # TODO Usar el sistema:
+            # GET http://ec2-34-234-66-195.compute-1.amazonaws.com/simusrec
+            # Body: { "user_id": 7 }
+            self.show_image = True
         elif self.intencion == "consulta_categoria":
             res = new_query(['category_id', 'subcategory_id'], "touristic_place_category", [("touristic_place_id", aux_context)])
             if len(res) > 0:
