@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 import nltk # Natural Language ToolKit: Tokenizar
 import pickle
+import requests
 
 import geocoder
 
@@ -80,14 +81,10 @@ def make_keywords(text):
 
 #================= ESTO ES LO 'SIMULADO' ==============
 
-# Tablas de la Base de Datos:
-fun_facts = pd.read_csv('data_prueba/fun_facts.csv', sep='|')
-touristic_place = pd.read_csv('data_prueba/touristic_place.csv', sep='|')
-touristic_place_category = pd.read_csv('data_prueba/touristic_place_category.csv', sep='|')
-url_images = pd.read_csv('data_prueba/url_images.csv', sep='|')
-user_context = pd.read_csv('data_prueba/user_context.csv', sep='|')
-
 # Nombres de todos los lugares existentes en la base de datos (Lista)
+# ... Tablas de la Base de Datos:
+touristic_place_category = pd.read_csv('data_prueba/touristic_place_category.csv', sep='|')
+# ... Nombres:
 names = list(touristic_place_category['touristic_place_id'])
 AUX_NAMES = [normalize_tilde(place) for place in names] # Convertir a Lista, Sin tildes para la búsqueda por keywords
 
@@ -105,6 +102,7 @@ def query_near(user_location: np.array):
     """
     user_location: Coordenadas del usuario, en forma np.array([longitud, latitud])
     """
+    touristic_place = pd.read_csv('data_prueba/touristic_place.csv', sep='|')
     longitudes = touristic_place['longitude']
     latitudes = touristic_place['latitude']
     distancia = []
@@ -195,7 +193,18 @@ def add_row(row: list, from_data: str, replace: bool = True, key_column: str = "
     df = df.append(row, ignore_index=True)
     df.to_csv(aux_ruta, index=False, sep = '|')
 
-# add_row([{'user_id': 1, 'place_context': 'Alo', 'time': 5}], 'user_context', replace=True, key_column='user_id')
-# aux = new_query(select_column="url", from_data="url_images", where_pairs=[('touristic_place_id', "'AEA'")])
-# print(aux)
-# print(aux.index)
+#================= REQUESTS ==============
+def get_recommendations(user_id):
+    # Endpoint:
+    r_url = "http://ec2-34-234-66-195.compute-1.amazonaws.com/simusrec"
+    # Body:
+    r_body = {'user_id': user_id}
+
+    # r = requests.get(url = r_url, data = r_body)
+    r = requests.request(method="get", url=r_url, params=r_body)
+    # print("Status:", r.status_code)
+    # print(r.text)
+    data = r.json
+    return data
+    
+# get_recommendations(7)
