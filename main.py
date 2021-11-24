@@ -28,76 +28,45 @@ class Init(Resource):
         }
         return jsonify(response)
 
-
 class Prediction(Resource):
-    @cors.crossdomain(origin='*',
-                      methods={"HEAD", "OPTIONS", "GET", "POST"})
+    @cors.crossdomain(origin='*', methods={"HEAD", "OPTIONS", "GET", "POST"})
+    
     def post(self):
-
-        # validate if exist place context cookie
-        if "place_context" in session:
-            place_context = session["place_context"]
-            print(place_context)
-        else:
-            place_context = " "
-
-        # changed 'msg' to 'text' according to rest api model
         msg = request.json['text']
-        cb = ChatBot(msg, place_context)
-
-        if "places_candidates" in session:
-            place_candidates = session["places_candidates"]
-            cb.intencion = session["intention"]
-            cb.isPlaces = True
-        else:
-            place_candidates = cb.set_message()
-            if len(place_candidates) > 1:
-                session.permanent = True
-                session["places_candidates"] = place_candidates
-                session["intention"] = cb.intencion
-            if cb.isPlaces:
-                session.pop("places_candidates", None)
-                session.pop("intention", None)
-
-        cb.select_candidate(place_candidates)
-
-        if cb.isPlacesSelected:
-            session.pop("places_candidates", None)
-            session.pop("intention", None)
-
-        if not cb.isPlaces:
-            cb.create_response()
-            cb.select_response()
-
-        message = cb.res
-
-        # Assign value for place context cookie
-        if "place_context" in session:
-            if cb.place_context == " ":
-                place_context = session["place_context"]
-                print(place_context)
-            else:
-                place_context = cb.place_context
-                session.permanent = True
-                session["place_context"] = place_context
-        else:
-            place_context = cb.place_context
-            session.permanent = True
-            session["place_context"] = place_context
-
-        print("context:")
-        print(place_context)
-
-        #Post to API
-        url="http://ec2-34-226-195-132.compute-1.amazonaws.com/api/users/message/create/"
+        user = request.json['user']
+        try:
+            url = request.json['url']
+        except:
+            url=""
+            
+        cb = ChatBot(msg, user)
+        many_candidates = cb.set_message()
+        
+        if many_candidates:
+            index=0
+            cb.selec_from_candidates(index)
+        
+        cb.confirm_candidate()
+        cb.save_context(user)
+        cb.create_response(user)
+        cb.select_response()            
+        message=cb.res
+        if cb.show_image:
+            botUrl = cb.get_url_image()
+        else: botUrl = ""
+                
+        url="http://ec2-52-90-137-95.compute-1.amazonaws.com/api/users/message/create/"
         payload=json.dumps(request.json)
         headers={
             'Content-Type': 'application/json'
         }
         apiresponse=requests.request("POST",url,headers=headers, data=payload)
+        
         if apiresponse.ok:
-            request.json['text']=message
-            request.json['is_user']=False
+            request.json['text']= message
+            request.json['is_user'] = False
+            request.json['url'] = botUrl
+            
             payloadbot=json.dumps(request.json)
             apiresponsebot=requests.request("POST",url,headers=headers,data=payloadbot)
             print(apiresponse.json())
@@ -120,17 +89,6 @@ class Prediction(Resource):
             }
             return jsonify(to_dict(response))
         
-        
-        
-
-
-        # response = {
-        #     'msg': message
-        # }
-
-        # print(request.json)
-        # return jsonify(to_dict(response))
-
 
 class PopCookie(Resource):
     @cors.crossdomain(origin='*',
