@@ -8,7 +8,6 @@ import pandas as pd
 import nltk # Natural Language ToolKit: Tokenizar
 import pickle
 import requests
-import json
 
 import geocoder
 
@@ -195,19 +194,17 @@ def add_row(row: list, from_data: str, replace: bool = True, key_column: str = "
     df.to_csv(aux_ruta, index=False, sep = '|')
 
 #================= REQUESTS ==============
-def get_recommendations(user_id: int):
+def get_recommendations(user_id):
     # Endpoint:
     r_url = "http://ec2-34-234-66-195.compute-1.amazonaws.com/simusrec"
     # Body:
     r_body = {'user_id': user_id}
-    # GET:
-    r = requests.get(url = r_url, data = r_body)
+
+    # r = requests.get(url = r_url, data = r_body)
+    r = requests.request(method="get", url=r_url, params=r_body)
     # print("Status:", r.status_code)
-    # return r
-    try:
-        data = r.json
-        return data['recommendations']
-    except:
-        return list([])
+    # print(r.text)
+    data = r.json
+    return data
     
 # get_recommendations(7)
